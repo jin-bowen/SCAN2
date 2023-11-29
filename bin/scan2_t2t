@@ -25,9 +25,9 @@ from sys import exit
 # in the configuration database.
 scan2_param_defaults = {
     'analysis': 'call_mutations',
-    'genome': 'hs37d5',
+    'genome': 'CHM13v2.0',
     'is_started': False,
-    'gatk': 'gatk3_joint',
+    'gatk': 'gatk4_joint',
     'parsimony_phasing': False,
     'target_fdr': 0.01,
     'rescue_target_fdr': 0.01,
@@ -526,7 +526,7 @@ def eagle_refpanel_files(eagle_refpanel):
     chrs = [ 'chr' + str(chrom) for chrom in list(range(1,23)) + [ 'X' ] ]
     files = {}
     for s in chrs:
-        files[s] = os.path.join(eagle_refpanel, '{0}_GRCh38.genotypes.bcf'.format(s))
+        files[s] = os.path.join(eagle_refpanel, '{0}.bcf'.format(s))
     return files
 
 
@@ -920,7 +920,7 @@ if __name__ == "__main__":
              'two additional files must be present: an index (.fai) and a '
              'dictionary (.dict).')
     req.add_argument('--genome', type=str,
-        choices=[ 'hs37d5', 'hg38', 'mm10' ],
+       choices=[ 'hs37d5', 'hg38', 'mm10', 'CHM13v2.0' ],
         help='Reference genome to use.  This is not checked against '
              'the provided reference genome or phasing panels, the user '
              'must ensure these match the supplied genome.  It is used '
