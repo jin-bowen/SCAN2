@@ -24,10 +24,10 @@ from sys import exit
 # are used to determine which command line arguments are not to be stored
 # in the configuration database.
 scan2_param_defaults = {
-    'analysis': 'call_mutations',
-    'genome': 'hs37d5',
+    'analysis': 'joint_panel',
+    'genome': 'CHM13v2.0',
     'is_started': False,
-    'gatk': 'gatk3_joint',
+    'gatk': 'gatk4_joint',
     'parsimony_phasing': False,
     'target_fdr': 0.01,
     'rescue_target_fdr': 0.01,
@@ -70,7 +70,7 @@ scan2_param_defaults = {
     'cross_sample_panel': None, # must be readable IF specified, but pipeline should run without it too
     'scripts': '/home/boj924/SCAN2/scripts',  # also a directory
     'chr_prefix': '',          # be nice to remove this; requires snakefile changes
-    'bam_map': {},             # maps sample name -> bam path
+    'gvcf_map': {},             # maps sample name -> gatk path
     'permtool_config_map': {},
     'permtool_matrix_map': {},
     'permtool_n_permutations': 10000,
@@ -87,9 +87,9 @@ scan2_file_defaults = {
     'snakefile': '/home/boj924/SCAN2/Snakefile',
     'ref': None,
     'dbsnp': None,
-    'bams': {},         # miscellaneous BAMs; not genotyped as single cells
-    'sc_bams': {},      # BAMs for single cells, will be genotyped
-    'bulk_bam': None,   # single bulk BAM for phasing, filtering germlines
+    'gvcfs': {},         # miscellaneous BAMs; not genotyped as single cells
+    'sc_gvcfs': {},      # BAMs for single cells, will be genotyped
+    'bulk_gvcf': None,   # single bulk BAM for phasing, filtering germlines
     'scan2_objects': {},
     'add_muts': None,
     'makepanel_metadata': None,
@@ -172,12 +172,13 @@ class Analysis:
             return '\n'.join([ str(self) ] + \
                 [ "%25s: %s" % (str(k), str(v)) \
                 for k, v in self.cfg.items() ])
+
         else:
             return '\n'.join([ str(self),
                 '%15s: %d single cell(s), %d bulk(s), %d other' % \
-                    ('BAMs', len(self.cfg['sc_bams']),
-                      self.cfg['bulk_bam'] is not None,
-                      len(self.cfg['bams'])),
+                    ('gvcfs', len(self.cfg['sc_gvcfs']),
+                      self.cfg['bulk_gvcf'] is not None,
+                      len(self.cfg['gvcfs'])),
                 '%15s: %s' % ('Creator', self.cfg['creator']),
                 '%15s: %s' % ('Create date', self.cfg['create_date']) ])
 
@@ -221,6 +222,7 @@ class Analysis:
             new_cfg = { **new_cfg, **Analysis.handle_regions(autosomes) } # dict merge
 
         updates = 0
+        print(new_cfg)
         for k, v in new_cfg.items():
             if k in self.cfg.keys() and v is not None and self.cfg[k] != v:
                 if args.verbose:
@@ -232,25 +234,24 @@ class Analysis:
                 self.cfg[k] = v
                 updates = updates + 1
 
-        # 2. Special update: sample -> bam map
+        # 2. Special update: sample -> gatk map
         if updates > 0:
             tups = []
-            if self.cfg['bulk_bam'] is not None:
-                tups.append((self.cfg['bulk_sample'], self.cfg['bulk_bam']))
-            if len(self.cfg['sc_bams']) > 0:
-                tups = tups + [ (s, b) for s, b in self.cfg['sc_bams'].items() ]
-            if len(self.cfg['bams']) > 0:
-                tups = tups + [ (s, b) for s, b in self.cfg['bams'].items() ]
+            if self.cfg['bulk_gvcf'] is not None:
+                tups.append((self.cfg['bulk_sample'], self.cfg['bulk_gvcf']))
+            if len(self.cfg['sc_gvcfs']) > 0:
+                tups = tups + [ s for s in self.cfg['sc_gvcfs'] ]
+            if len(self.cfg['gvcfs']) > 0:
+                tups = tups + [ s for s in self.cfg['gvcfs'] ]
             if len(tups) > 0:
-                self.cfg['bam_map'] = dict(tups)
-                print(self.cfg['bam_map'])
+                self.cfg['gvcf_map'] = tups
+                print(self.cfg['gvcf_map'])
 
         if updates == 0:
             print("No changes to make to configuration. Stopping.")
         else:
             with open(self.config_path, 'w') as yf:
                 yaml.dump(self.cfg, yf, default_flow_style=False)
-
 
     def handle_special(self, key, value):
         """
@@ -259,41 +260,16 @@ class Analysis:
         to the configuration database.
         To skip special handling, simply return the original key and value.
         """
-        if key in [ 'bam', 'sc_bam', 'bulk_bam', 'scan2_object' ]:
-            if key in [ 'bam', 'sc_bam' ]:  # these provide lists
-                return { key + 's' :
-                    dict([ (sample_from_bam(bam), readable_file(bam)) for bam in value ]) }
-            if key == 'bulk_bam':
-                return { 'bulk_bam': readable_file(value),
-                         'bulk_sample': sample_from_bam(value) }
-            if key == 'scan2_object':       # list with nargs=2
-                return { key + 's' :
-                    dict([ (sample_id, readable_file(rda)) for sample_id, rda in value ]) }
-
-        if key == 'permtool_sample':
-            return {
-                'permtool_config_map' :
-                    dict([ (sample_id, readable_file(self.make_config_path(scan2_dir))) for sample_id, scan2_dir in value ]),
-                'permtool_matrix_map' :
-                    dict([ (sample_id, readable_file(os.path.join(scan2_dir, 'depth_profile', 'joint_depth_matrix.tab.gz'))) for sample_id, scan2_dir in value ]) }
+        if key in [ 'gvcf', 'sc_gvcf', 'bulk_gvcf', 'scan2_object' ]:
+            if key in [ 'gvcf', 'sc_gvcf' ]:  # these provide lists
+                return { key + 's' :  [readable_dir(gvcf) for gvcf in value ] }
+            if key == 'bulk_gvcf':
+                return { 'bulk_gvcf': readable_dir(value) }
 
         if key in [ 'regions', 'regions_file' ]:
             regions = regions_from_string(value) if \
                 key == 'regions' else regions_from_file(value)
             return Analysis.handle_regions(regions)
-
-        if key == 'abmodel_use_fit':
-            # this is a list of tuples
-            return { key : dict([ (sample, readable_file(file)) for sample, file in value ]) }
-
-        if key == 'phaser':
-            return { 'phaser': value.lower() }   # Just ensure lowercase
-
-        if key in [ 'eagle_refpanel' ]:
-            # value = the path to the Eagle ref panel
-            # Other sanity checks related to the reference panel are handled
-            # in check_phaser().
-            return { 'eagle_refpanel' : eagle_refpanel_files(value) }
 
         if key == 'gatk_vcf':
             # check that there is an associated VCF index file with the expected name
@@ -302,6 +278,7 @@ class Analysis:
 
         # default: use the key=value pair as specified on command line
         return { key: value }
+
 
 
     @staticmethod
@@ -318,33 +295,33 @@ class Analysis:
         [ readable_file(r) for r in self.cfg['scan2_objects'].values() ]
 
 
-    def check_bams(self, error_on_missing=True):
-        if error_on_missing and self.cfg['bulk_bam'] is None:
-            error('no bulk BAM was specified (--bulk-bam)')
+    def check_gvcfs(self, error_on_missing=True):
+        if error_on_missing and self.cfg['bulk_gvcf'] is None:
+            error('no bulk gvcf was specified (--bulk-gvcf)')
 
-        if error_on_missing and len(self.cfg['sc_bams']) == 0:
-            error('no single cell BAMs were specified (--sc-bam)')
+        if error_on_missing and len(self.cfg['sc_gvcfs']) == 0:
+            error('no single cell gvcfs were specified (--sc-gvcf)')
 
-        all_bams = []
-        if self.cfg['bulk_bam'] is not None:
-            print('adding bulk')
-            all_bams += [ self.cfg['bulk_bam'] ]   # not a list like others
-        if len(self.cfg['sc_bams']) > 0:
-            print('adding SC')
-            all_bams += list(self.cfg['sc_bams'].values())
-        if self.cfg['bams'] is not None:
-            print('adding bam')
-            all_bams += list(self.cfg['bams'].values())
+        all_gvcfs = []
+        if self.cfg['bulk_gvcf'] is not None:
+            print('adding bulk-gvcf')
+            all_gvcfs += self.cfg['bulk_gvcf']  # not a list like others
+        if len(self.cfg['sc_gvcfs']) > 0:
+            print('adding sc-gvcf')
+            all_gvcfs += self.cfg['sc_gvcfs']
+        if self.cfg['gvcfs'] is not None:
+            print('adding gvcf')
+            all_gvcfs += self.cfg['gvcfs']
 
-        [ readable_file(b) for b in all_bams ]
-        # sometimes indexes convert .bam -> .bai rather than appending .bam -> .bam.bai
-        #[ readable_file(b + '.bai') for b in all_bams ]
+        [ readable_dir(b) for b in all_gvcfs ]
+        # sometimes indexes convert .gvcf -> .bai rather than appending .gvcf -> .gvcf.bai
+        #[ readable_file(b + '.bai') for b in all_gvcfs ]
 
 
-    def check_bams_makepanel(self):
+    def check_gvcfs_makepanel(self):
         """
         Differs from above in that makepanel comes with a metadata file
-        identifying single cell and bulk bams. Make sure everything in
+        identifying single cell and bulk gvcfs. Make sure everything in
         the metadata file is present in the list of BAMs.
         """
         donors = []
@@ -366,86 +343,16 @@ class Analysis:
         if amps.count('bulk') == len(amps):
             error("All BAMs were annotated as 'bulk' in --makepanel-metadata. At least one single cell BAM is required for panel building.")
             
-        # Make sure all sample IDs in the makepanel file exist in BAM map
-
-        bam_samples = []
-        if self.cfg['bulk_bam'] is not None:
-            bam_samples += [ self.cfg['bulk_bam'] ]   # not a list like others
-        if self.cfg['sc_bams'] is not None:
-            bam_samples += list(self.cfg['sc_bams'].keys())
-        if self.cfg['bams'] is not None:
-            bam_samples += list(self.cfg['bams'].keys())
-
-
-        if not all([ s in bam_samples for s in samples ]):
-            error('some samples listed in --makepanel-metadata have no associated BAM file (specified by --bam, --sc-bam, or --bulk-bam). Please ensure that every BAM in the metadata table is present. Note that samples IDs are automatically determined from BAM files by the SM: tag in the first read group (@RG record).')
-        
-
-    def check_phaser(self):
-        # Determine the phaser and check relevant files.
-        if self.cfg['phaser'] == 'shapeit':
-            check_shapeit(self.cfg['shapeit_refpanel'])
-        elif self.cfg['phaser'] == 'eagle':
-            check_eagle(self.cfg['eagle_refpanel'], self.cfg['eagle_genmap'])
-        else:
-            error("--phaser must be either 'shapeit' or 'eagle'\n")
-
-
     def validate(self):
         """
         Check that all necessary files exist and ensure the list of
         BAMs and single cell/bulk sample IDs make sense.
         """
-        if self.cfg['analysis'] == 'call_mutations' or self.cfg['analysis'] == 'makepanel':
-            # Additional checks: index files
-            print("Checking reference genome..")
-            check_refgenome(self.cfg['ref'])
-            print("Checking dbSNP VCF..")
-            check_dbsnp(self.cfg['dbsnp'])
-    
-
-            if self.cfg['analysis'] == 'call_mutations':
-                # Additional checks: indexes, at least one bulk and one single cell
-                print("Checking BAMs..")
-                self.check_bams()
-
-                # Additional checks: very specific reference panel layout
-                print("Checking phasing reference panel..")
-                self.check_phaser()
-
-            if self.cfg['analysis'] == 'makepanel':
-                print("Checking BAMs..")
-                self.check_bams(error_on_missing=False)
-                print("Checking panel metadata..")
-                readable_file(self.cfg['makepanel_metadata'])
-                self.check_bams_makepanel()
-
-        if self.cfg['analysis'] == 'rescue':
-            print("Checking SCAN2 objects..")
-            self.check_scan2_objects()
-
-            if self.cfg['add_muts'] is not None:
-                readable_file(self.cfg['add_muts'])
-
-            fdr = float(self.cfg['rescue_target_fdr'])
-            if fdr < 0 or fdr > 1:
-                error('--rescue-target-fdr must be in [0, 1]')
-
-        if self.cfg['analysis'] == 'permtool':
-            print("Checking mutation file..")
-            readable_file(self.cfg['permtool_muts'])
-
-            print("Checking bedtools -g file..")
-            readable_file(self.cfg['permtool_bedtools_genome_file'])
-
-            print("Checking per-sample SCAN2 config files..")
-            for sample, config in self.cfg['permtool_config_map'].items():
-                readable_file(config)
-
-            print("Checking depth matrix files..")
-            for sample, matrix in self.cfg['permtool_matrix_map'].items():
-                readable_file(matrix)
-
+        print("Checking BAMs..")
+        self.check_gvcfs(error_on_missing=False)
+        print("Checking panel metadata..")
+        readable_file(self.cfg['makepanel_metadata'])
+        self.check_gvcfs_makepanel()
 
 
 def error(str):
@@ -467,6 +374,12 @@ def readable_file(path):
             return os.path.abspath(path)
     except IOError as err:
         error("file {0} could not be read:\n    {1}".format(path, err))
+
+def readable_dir(path):
+    if os.path.exists(path):
+            return os.path.abspath(path)
+    else:
+        error("dir {0} is not valid:\n".format(path))
 
 
 def check_refgenome(refgenome):
@@ -504,61 +417,6 @@ def check_dbsnp(dbsnp):
     readable_file(dbsnp + '.tbi')
 
 
-def check_shapeit(shapeit_panel):
-    """Check all required SHAPEIT haplotype panel files. Exit if any are missing."""
-    if shapeit_panel is None:
-        error("no SHAPEIT reference panel provided (--shapeit-refpanel)")
-    if not os.path.exists(shapeit_panel):
-        error("SHAPEIT panel path does not exist: " + shapeit_panel)
-    if not os.path.isdir(shapeit_panel):
-        error("SHAPEIT panel path is not a directory; " + shapeit_panel)
-    for i in range(1, 23):
-        fname = 'genetic_map_chr{0}_combined_b37.txt'.format(i)
-        readable_file(os.path.join(shapeit_panel, fname))
-        for suf in [ 'hap', 'legend' ]:
-            fname = "1000GP_Phase3_chr{0}.{1}.gz".format(i, suf)
-            readable_file(os.path.join(shapeit_panel, fname))
-
-    # chrX is not consistently named
-    readable_file(os.path.join(shapeit_panel, "1000GP_Phase3_chrX_NONPAR.hap.gz"))
-    readable_file(os.path.join(shapeit_panel, "1000GP_Phase3_chrX_NONPAR.legend.gz"))
-    readable_file(os.path.join(shapeit_panel, "genetic_map_chrX_nonPAR_combined_b37.txt"))
-
-
-def eagle_refpanel_files(eagle_refpanel):
-    chrs = [ 'chr' + str(chrom) for chrom in list(range(1,23)) + [ 'X' ] ]
-    files = {}
-    for s in chrs:
-        files[s] = os.path.join(eagle_refpanel, '{0}_GRCh38.genotypes.bcf'.format(s))
-    return files
-
-
-def check_eagle(eagle_refpanel, eagle_genmap):
-    """This function is called in scan2 validate, which is AFTER the config
-    database has been parsed. So eagle_refpanel is a dict() chr -> file path,
-    not the path to the top level of the Eagle refpanel dir."""
-    if eagle_refpanel is None:
-        error("no Eagle reference panel provided (--eagle-refpanel)")
-
-    if eagle_genmap is None:
-        error("no Eagle genmap provided (--eagle-genmap)")
-    if not os.path.exists(eagle_genmap):
-        error("Provided Eagle genmap file does not exist: " + eagle_genmap)
-
-    for f in eagle_refpanel.values():
-        readable_file(f)
-        readable_file(f + '.csi')
-
-
-def sample_from_bam(bampath):
-    with pysam.AlignmentFile(bampath, 'r') as af:
-        sample = af.header.to_dict()['RG'][0]['SM']
-    print('Got sample name "%s" from BAM %s' % (sample, bampath))
-    return sample
-
-
-
-
 def regions_from_string(regions):
     return args.regions.split(',')
 
@@ -584,9 +442,6 @@ def chrs_from_regions(regions):
             chrs.append(c)
 
     return chrs
-
-
-
 
 
 
@@ -628,27 +483,6 @@ def do_validate(args):
     a.validate()
 
 
-
-def do_run(args):
-    a = Analysis(args.analysis_dir)
-
-    # I would like to use the snakemake API directly (i.e., call snakemake()),
-    # but this makes it difficult to allow the user to supply arbitrary
-    # snakemake options.
-    # Must be a vector of strings as would be expected in argv[1:].
-    # N.B., argv[0] is the invoking executable and should not be specified.
-    snakemake_command = [
-        "--snakefile",  args.snakefile,
-        "--configfile", a.config_path,
-        "--directory", a.analysis_dir,
-        "--latency-wait", "30",
-        "--rerun-incomplete",
-        "--jobs", str(args.joblimit)
-    ]
-
-    run_snakemake(snakemake_command, args, a)
-
-
 # Runs a snakemake command provided by the user. Assumes 'args' contains
 # runtime args.
 def run_snakemake(snakemake_command, args, a):
@@ -675,37 +509,7 @@ def run_snakemake(snakemake_command, args, a):
     snakemake.main(snakemake_command)
 
 
-def do_makepanel(args):
-    a = Analysis(args.analysis_dir)
-
-    snakemake_command = [
-        "--snakefile",  args.snakefile,
-        "--configfile", a.config_path,
-        "--directory", a.analysis_dir,
-        "--latency-wait", "30",
-        "--rerun-incomplete",
-        "--jobs", str(args.joblimit)
-    ]
-
-    run_snakemake(snakemake_command, args, a)
-
-
-def do_rescue(args):
-    a = Analysis(args.analysis_dir)
-
-    snakemake_command = [
-        "--snakefile",  args.snakefile,
-        "--configfile", a.config_path,
-        "--directory", a.analysis_dir,
-        "--latency-wait", "30",
-        "--rerun-incomplete",
-        "--jobs", str(args.joblimit)
-    ]
-
-    run_snakemake(snakemake_command, args, a)
-
-
-def do_permtool(args):
+def do_joint_panel(args):
     a = Analysis(args.analysis_dir)
 
     snakemake_command = [
@@ -859,7 +663,7 @@ if __name__ == "__main__":
     config_parser.set_defaults(executor=do_config)
     
     config_parser.add_argument('--analysis', default='call_mutations',
-        choices=[ 'call_mutations', 'makepanel', 'rescue', 'permtool' ],
+        choices=[ 'call_mutations','joint_panel', 'makepanel', 'rescue', 'permtool' ],
         help='Analysis to run.\ncall_mutations: call somatic mutations.\nmakepanel: create a cross-sample panel suitable for --cross-sample-filter.\nrescue: perform signature-based rescue on SCAN2 objects generated by call_mutations.\npermtool: create control background distributions for somatic mutations by permutation. Mutations must be preprocesed to, e.g., remove duplicates.')
     config_parser.add_argument('--verbose', action='store_true', default=False,
         help='Print detailed list of all configuration changes.')
@@ -923,7 +727,7 @@ if __name__ == "__main__":
              'two additional files must be present: an index (.fai) and a '
              'dictionary (.dict).')
     req.add_argument('--genome', type=str,
-        choices=[ 'hs37d5', 'hg38', 'mm10' ],
+       choices=[ 'hs37d5', 'hg38', 'mm10', 'CHM13v2.0' ],
         help='Reference genome to use.  This is not checked against '
              'the provided reference genome or phasing panels, the user '
              'must ensure these match the supplied genome.  It is used '
@@ -935,22 +739,22 @@ if __name__ == "__main__":
         help='Path to a tribble-indexed (NOT tabix indexed) dbSNP VCF.')
     
     infiles = config_parser.add_argument_group('Input sequencing data',
-        'At least two BAM files must be specified: one via --bulk-bam'
-        ' and at least via one via --sc-bam.  Additional BAMs can be '
-        ' specified by --bam: these will be used for GATK joint calling,'
+        'At least two BAM files must be specified: one via --bulk-gvcf'
+        ' and at least via one via --sc-gvcf.  Additional BAMs can be '
+        ' specified by --gvcf: these will be used for GATK joint calling,'
         'but will affect the analysis in no other way.  This can be '
         'useful for adding additional bulks for followup comparisons.'
         'IMPORTANT: BAM files must be indexed (.bai) and must contain'
         ' only a single sample, identified by an @RG line with an SM '
         ' tag in the header.')
-    infiles.add_argument('--bulk-bam', metavar='PATH',
+    infiles.add_argument('--bulk-gvcf', metavar='PATH',
         help='Matched bulk sample (not-single cell) for removing '
             'germline or clonal SNVs.  Only one sample may be '
             'designated as the bulk sample.')
-    infiles.add_argument('--sc-bam', metavar='PATH', action='append',
+    infiles.add_argument('--sc-gvcf', metavar='PATH', action='append',
         help='BAM corresponding to single cells that are to be '
             'analyzed.  May be specified multiple times.')
-    infiles.add_argument('--bam',  action='append', metavar='PATH',
+    infiles.add_argument('--gvcf',  action='append', metavar='PATH',
         help='Additional BAM files that will be included in GATK\'s'
             'joint genotyping, but will otherwise not affect the '
             'analysis.  May be specified several times.')
@@ -965,130 +769,12 @@ if __name__ == "__main__":
         help='A BED file containing regions to be analyzed.  Cannot be specified in addition to --regions.')
     
     
-    
-    caller = config_parser.add_argument_group("Somatic SNV calling parameters. A minimum requirement of 2 reads supporting a putative mutation is probably good practice at most sequencing depths.  However, the minimum total depth for single cell and bulk may need to be altered.  The defaults of 6 and 11, respectively, were successful on single cells with >25x and bulk with >30x mean coverage.")
-    caller.add_argument('--target-fdr', type=float, metavar='FLOAT',
-        help='Desired false discovery rate (FDR), a number between 0 and 1 that represents the fraction of the final call set that is expected to be false positives.  This is not formal FDR control via, e.g., q-values.  In general, lower values will increase specificity at the cost of sensitivity.')
-    caller.add_argument('--snv-min-sc-alt', type=int, metavar='INT',
-        help='Reject somatic SNVs with fewer than INT reads carrying the mutation in single cells.')
-    caller.add_argument('--snv-min-sc-dp', type=int, metavar='INT',
-        help='Reject somatic SNVs covered by fewer than INT reads in single cells.')
-    caller.add_argument('--snv-min-bulk-dp', type=int,  metavar='INT',
-        help='Reject somatic SNVs covered by fewer than INT reads in bulk.')
-    caller.add_argument('--snv-max-bulk-alt', type=int,  metavar='INT',
-        help='Reject somatic SNVs supported by more than INT reads in bulk.')
-    caller.add_argument('--snv-max-bulk-af', type=float,  metavar='FLOAT',
-        help='Reject mosaic SNVs with VAF > FLOAT in bulk. E.g., --max-bulk-af=0.3.')
-    caller.add_argument('--indel-min-sc-alt', type=int, metavar='INT',
-        help='Reject somatic indels with fewer than INT reads carrying the mutation in single cells.')
-    caller.add_argument('--indel-min-sc-dp', type=int, metavar='INT',
-        help='Reject somatic indels covered by fewer than INT reads in single cells.')
-    caller.add_argument('--indel-min-bulk-dp', type=int,  metavar='INT',
-        help='Reject somatic indels covered by fewer than INT reads in bulk.')
-    caller.add_argument('--indel-max-bulk-alt', type=int,  metavar='INT',
-        help='Reject somatic indels supported by more than INT reads in bulk.')
-    caller.add_argument('--indel-max-bulk-af', type=float,  metavar='FLOAT',
-        help='Reject mosaic indels with VAF > FLOAT in bulk. E.g., --max-bulk-af=0.3.')
-    caller.add_argument('--min-base-quality-score', type=int,
-        help="Passed to GATK HaplotypeCaller's --min-base-quality-score. "
-             "Currently only used in GATK4 GVCF.")
-
-    caller.add_argument('--cross-sample-panel', type=readable_file, metavar='PATH',
-        help='A table of alt alleles detected over a large number of single cells and bulks. Currently used only for indel filtering but should probably also be used for SNV filtering. Indel calling is NOT precise without a panel of normals.')
-    #caller.add_argument('--mosaic-snvs', action='store_true',
-        #help='Enable detection of mosaic SNVs.')
-    # XXX: Used to be optional, probably won't ever make optional again
-    #caller.add_argument('--callable-regions', metavar='true/false/yes/no',
-        ##type=lambda x: bool(distutils.util.strtobool(x)),
-        #help='Determine the fraction of callable genome based on '
-             #'read depth in single cells and matched bulk. This callable '
-             #'genome fraction is necessary for estimating the genome-wide '
-             #'mutation burden. This flag is enabled by default; to disable, '
-             #'callable region calculation, use --calable-regions false.')
-    
-    
-    phasing = config_parser.add_argument_group('Phasing options',
-        'Choose SHAPEIT2 or Eagle for phasing')
-    phasing.add_argument('--phaser', metavar='eagle|shapeit', type=str,
-        help='SHAPEIT2 does not provide a reference panel aligned to hg38. If your data are aligned to this genome version, please use Eagle instead. Eagle is currently untested for GRCh37, but may work.')
-    phasing.add_argument('--shapeit-refpanel', metavar='DIR',
-        help='Path to the 1000 genomes project phase 3 SHAPEIT panel.  At this time, other phasing panels are not supported. This panel is required if phaser=shapeit.')
-    phasing.add_argument('--parsimony-phasing', action='store_true',
-        help='Choose the phase of each training hSNP i to minimize |VAF_(i-1) - VAF_i|.  This overrides population-based phasing and does not produce well-phased mutations.  Instead, it ensures that switching errors (caused by panel phasing) in regions with allelic imbalance do not inflate model variance or lead to "ping-pong" allele balance estimates.')
-    phasing.add_argument('--eagle-refpanel', metavar='DIR',
-        help='Path to the an Eagle compatible phasing panel. The reference panel is a set of BCF files, one per chromosome. File names must match the pattern ${chromosome}*.bcf. The user should take care to ensure that chromosome names contain the "chr" prefix to properly match the supplied reference genome. This parameter is required if phaser=eagle.')
-    phasing.add_argument('--eagle-genmap', metavar='DIR',
-        help='Path to Eagle\'s provided genetic map (can be found under the "tables" directory in the Eagle tarball). This is required if phaser=eagle.')
-    
-    
-    abmodel = config_parser.add_argument_group("AB model fitting",
-        "These parameters control the exhaustive parameter search used to fit an AB correlation function for each chromosome.  This is by far the most time consuming step of the calling process.  None of these parameters are used for subsequent AB inference.")
-    abmodel.add_argument('--abmodel-n-cores', type=int, metavar='INT',
-        help='Multithread with INT cores when fitting the AB model parameters.  This is the preferred way of fitting the AB model and contrasts with the chunk strategy, described below.')
-    abmodel.add_argument('--abmodel-samples-per-step', type=int, metavar='INT',
-        help='Sample the AB model log-likelihood function INT times during each parameter space refinement step.')
-    abmodel.add_argument('--abmodel-hsnp-tile-size', type=int, metavar='INT',
-        help='Approximate the AB model likelihood function for each chromosome by breaking hSNPs into non-overlapping tiles of size INT.  Larger values significantly increase runtime, but may be necessary for organisms with high SNP density (e.g., >1 hSNP per kilobase on average).')
-    abmodel.add_argument('--abmodel-refine-steps', type=int, metavar='INT',
-        help='Refine the parameter space for random sampling INT times.  After the first log-likelihood sampling has completed, a new parameter space is defined so as to contain the 50 points with highest log likelihood.')
-    abmodel.add_argument('--abmodel-use-fit', nargs=2, action='append', metavar=('SAMPLE_ID', 'FITS.RDA'),
-        help='Do not fit the AB model for sample SAMPLE_ID; instead, use the fits provided in FITS.RDA. This option may be specified multiple times.')
-    abmodel.add_argument('--abmodel-chunk-strategy', action='store_true', default=False,
-        help='Legacy strategy for fitting AB model parameters.  In the chunked strategy, the job of sampling --abmodel-samples-per-chunk per refinement step is split into --abmodel-chunks single threaded jobs.  This was useful before multithreading support was added to AB parameter fitting and, especially, before reduced tile sampling was found to be effective.  It is unlikely that users will ever want to opt in to this strategy.')
-    abmodel.add_argument('--abmodel-chunks', type=int, metavar='INT',
-        help='Parallelize AB model fitting by splitting each AB model sampling step into INT jobs per chromosome. Only used by --abmodel-chunk-strategy, which is no longer the preferred way of parallelizing AB model fitting.')
-    
-    
-    
-    spikein = config_parser.add_argument_group("hSNP spike-ins",
-        'hSNP spike ins provide a way to estimate sensitivity and the effects of various filters.  hSNP spikeins are also used to train models for excess indel and read clipping, so at least a few thousand spikeins are desired.')
-    spikein.add_argument('--resample-M', type=int, metavar="INT",
-        help='Parameter for rejection sampling. Larger M will produce fewer hSNP spikein samples for sensitivity and total mutation burden estimation. However, M must be large enough to enable proper rejection sampling.')
-    
-    
-    rescue = config_parser.add_argument_group("Signature-based somatic mutation rescue (scan2 rescue)")
-    rescue.add_argument('--scan2-object', nargs=2, action='append', metavar=('SAMPLE_ID', 'RDA'),
-        help='SCAN2 object files as generated by call_mutations. SAMPLE_ID must '
-             'match the @single.cell property of the object stored in RDA. This '
-             'argument can be specified multiple times to create a batch.')
-    rescue.add_argument('--add-muts', metavar='CSV', type=readable_file,
-        help='CSV file containing somatic mutations, one per line, to add to '
-             'the batch for calculating the true mutation specrum. The file must '
-             'contain at least two columns: muttype (entries in this column can '
-             'have value "snv" or "indel") and mutsig (values in this column must '
-             'be SBS96- or ID83-channel values; e.g. ACC:C>A for SBS96 or '
-             '3:Del:R:0 for ID83)')
-    rescue.add_argument('--rescue-target-fdr', metavar='FLOAT', type=float,
-        help='Target FDR for mutation signature rescue. Subject to the same '
-             'interpretation and caveats as --target-fdr.')
-
-
-    makepanel = config_parser.add_argument_group("Cross-sample filter creation (scan2 makepanel)")
-    makepanel.add_argument('--makepanel-metadata', metavar='CSV', type=readable_file,
+    joint_panel = config_parser.add_argument_group("Cross-sample filter creation (scan2 joint_panel)")
+    joint_panel.add_argument('--makepanel-metadata', metavar='CSV', type=readable_file,
         help='CSV file containing metadata describing the samples in the panel. '
              'Must contain columns named: sample, donor and amp. The amp column '
              'is used to determine bulk vs. single cell status; amp=bulk (case '
              'sensitive) for bulks and any other value for single cells.')
-
-
-    permtool = config_parser.add_argument_group("Mutation permutation for estimating background mutation rates.")
-    permtool.add_argument('--permtool-muts', metavar='CSV', type=readable_file,
-        help='CSV file containing all somatic calls to be permuted. Should contain '
-             'at lease the following columns: sample, chr, pos, refnt, altnt, pass, '
-             'rescue. Required.')
-    permtool.add_argument('--permtool-n-permutations', default=10000, type=int, metavar='N',
-        help='Number of shuffled mutation sets to create.')
-    permtool.add_argument('--permtool-sample', nargs=2, action='append', metavar=('SAMPLE_ID', 'SCAN2_DIR'),
-        help='Each sample to be permuted must be supplied explicitly by specifying '
-             'this parameter. SCAN2_DIR must point to the top level of a SCAN2 '
-             'directory created by the call_mutations pipeline. At least one '
-             '--permtool-sample is required for `scan2 permtool`.')
-    permtool.add_argument('--permtool-snv-generation-param', default=100000, type=int, metavar='N',
-        help='Number of random SNVs to generate per iteration. Enough random sites must be generated so that the mutation spectrum of the random sites contains at least one copy of the input spectrum. Ideally, an iteration should contain 10-100 copies. Increase this parameter if directed by permtool or if your mutations contain a large number of rare types (particularly CpGs).')
-    permtool.add_argument('--permtool-indel-generation-param', default=1/50, type=float, metavar='FLOAT',
-        help='Similar to --permtool-snv-generation-param but acts as a multiplier for a hard-coded base number of random indels to generate per iteration.')
-    permtool.add_argument('--permtool-bedtools-genome-file', type=readable_file, metavar='PATH',
-        help='Genome file formatted for the -g option of bedtools intersect.')
 
 
 
@@ -1102,104 +788,28 @@ if __name__ == "__main__":
     validate_parser.set_defaults(executor=do_validate)
     
     
-    ##########################################################################
-    # The 'run' subcommand
-    #
-    # This actually runs an analysis
-    run_parser = subparsers.add_parser('run',
-        help='Run a fully configured SCAN2 analysis.  Always run the '
-            '"validate" subcommand first.')
-    run_parser.set_defaults(executor=do_run)
-    run_parser = add_runtime_args(run_parser)
-    
 
     ##########################################################################
-    # The 'show' subcommand
-    #
-    # Show all configuration information. Maybe allow for serialization?
-    # Could just dump the YAML.
-    show_parser = subparsers.add_parser('show',
-        help='Show the configuration of a SCAN2 analysis.')
-    show_parser.set_defaults(executor=do_show)
-    show_parser.add_argument('--verbose', action='store_true', default=False,
-        help='Show all configuration variables and settings.')
-    
-    
-    ##########################################################################
-    # The 'progress' subcommand
-    #
-    # Print some information about the progress of the run:
-    #   #Jobs complete / Total #Jobs
-    #   #Jobs with errors
-    progress_parser = subparsers.add_parser('progress',
-        help='Prints statistics regarding the progress of a SCAN2 run.')
-    progress_parser.set_defaults(executor=do_progress)
-    progress_parser.add_argument('-v', '--verbose', action='store_true', default=False,
-        help='Show progress for individual rules.')
-
-
-    ##########################################################################
-    # The 'makepanel' subcommand
+    # The 'joint_panel' subcommand
     #
     # Runs GATK HaplotypeCaller on a large set of BAMs, usually across cells
     # from multiple individuals. The goal is to generate a matrix of read
     # support for reference and alternate alleles at all sites with evidence
     # of non-reference bases.
     #
-    # makepanel runs an analysis, so runtime_args are appropriate.
-    makepanel_parser = subparsers.add_parser('makepanel',
+    # joint_panel runs an analysis, so runtime_args are appropriate.
+    joint_panel_parser = subparsers.add_parser('joint_panel',
         help='Run GATK HaplotypeCaller jointly. Produces files necessary for '
              'indel calling (particularly, the cross-sample filter). IMPORTANT: '
-             'If `makepanel` output is not directly used as input to SCAN2 '
+             'If `joint_panel` output is not directly used as input to SCAN2 '
              'mutation calling, then the user should ensure that identical '
-             '--gatk options are used between makepanel and run.')
-    makepanel_parser.set_defaults(executor=do_makepanel)
-    makepanel_parser = add_runtime_args(makepanel_parser)
-    makepanel_parser.add_argument('--makepanel-n-cores', type=int, default=20, metavar='N',
+             '--gatk options are used between joint_panel and run.')
+    joint_panel_parser.set_defaults(executor=do_joint_panel)
+    joint_panel_parser = add_runtime_args(joint_panel_parser)
+    joint_panel_parser.add_argument('--joint_panel-n-cores', type=int, default=20, metavar='N',
         help='Number of cores to use when digesting cross-sample panel GATK output.')
     
     
-    ##########################################################################
-    # The 'rescue' subcommand
-    #
-    # Runs SCAN2 somatic mutation rescue procedures. Currently, rescue is
-    # performed using mutation signatures.
-    #
-    # rescue runs an analysis, so runtime_args are appropriate.
-    rescue_parser = subparsers.add_parser('rescue',
-        help='Run SCAN2 mutation signature-based rescue to call additional '
-             'somatic SNVs and indels that did not meet the requirements for '
-             'VAF-based calling, but are nevertheless unlikely to be '
-             'artifactual.')
-    rescue_parser.set_defaults(executor=do_rescue)
-    rescue_parser = add_runtime_args(rescue_parser)
-    rescue_parser.add_argument('--rescue-n-cores', type=int, default=20, metavar='N',
-        help='Parallelize somatic mutation rescue over N cores. Each core reads '
-             'and processes a full SCAN2 object. For typical human cells, about '   
-             '6 GB of RAM is necessary per core.')
-
-
-    ##########################################################################
-    # The 'permtool' subcommand
-    #
-    # Permutes mutations to create background mutation rates for enrichment
-    # testing.
-    #
-    # permtool runs an analysis, so runtime_args are appropriate.
-    permtool_parser = subparsers.add_parser('permtool',
-        help='Shuffle somatic mutations around the part of the genome callable '
-             'by SCAN2. Also ensures that shuffled mutations match in mutation '
-             'spectrum. Importantly, the user must preprocess somatic mutations '
-             'to remove, e.g., duplicated sites. SCAN2\'s digest_calls.R script '
-             'performs some recommended preprocessing steps. Memory required for '
-             'this pipeline is around 4 GB per core. During the '
-             'make_permutations phase, bedtools shuffle can require ~2 GB of '
-             'memory per thread at peak depending on the size of the callable '
-             'regions file.')
-    permtool_parser.set_defaults(executor=do_permtool)
-    permtool_parser = add_runtime_args(permtool_parser)
-
-
     # Get the args and run the relavent subcommand
     args = ap.parse_args()
     if args.subcommand is None:
