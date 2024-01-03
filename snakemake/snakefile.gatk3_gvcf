@@ -10,17 +10,17 @@ rule gatk_gather:
         vcf="gatk/hc_raw.mmq{gatk_mmq}.vcf"
     params:
         lambda wildcards, input:
-            ' '.join([ "-I " + f for f in input ])
+            ' '.join([ "-V " + f for f in input ])
     resources:
         mem=4000
     benchmark:
         "gatk/gather_benchmark.mmq{gatk_mmq}.tsv"
     shell:
-        "gatk GatherVcfs "
-        "    --java-options '-Xmx3G -Xms3G'"
+        "gatk3 -Xmx3500M -Xms3500M"
+        "    -T CombineVariants"
         "    {params} "
         "    -R {config[ref]}"
-        "    -O {output.vcf}"
+        "    -o {output.vcf}"
 
 
 rule gatk_genotypegvcfs:
@@ -33,12 +33,12 @@ rule gatk_genotypegvcfs:
     resources:
         mem=8000
     shell:
-        "gatk GenotypeGVCFs"
-        "   --java-options '-Xmx4G -Xms4G'"
+        "gatk3 -Xmx3500M -Xms3500M"
+        "   -T GenotypeGVCFs"
         "   --dbsnp {config[dbsnp]}"
         "   -R {config[ref]}"
         "   -V {input}"
-        "   -O {output}"
+        "   -o {output}"
 
 
 rule gatk_combinegvcfs:
@@ -56,13 +56,13 @@ rule gatk_combinegvcfs:
         "gatk/combinegvcfs_benchmark.mmq{gatk_mmq}_chunk{gatk_chunk}.tsv"
     params:
         infiles=lambda wildcards, input:
-            ' '.join([ "--variant " + f for f in input ])
+            ' '.join([ "-I " + f for f in input ])
     shell:
-        "gatk CombineGVCFs"
-        "   --java-options '-Xmx8G -Xmx8G'"
+        "gatk3 -Xmx3500M -Xms3500M" 
+        "   -T CombineGVCFs"
         "   -R {config[ref]}"
         "   {params.infiles}"
-        "   -O {output}"
+        "   -o {output}"
 
 
 rule gatk_scatter:
@@ -79,14 +79,16 @@ rule gatk_scatter:
     benchmark:
         "gatk/{sample}/scatter_benchmark.mmq{gatk_mmq}_chunk{gatk_chunk}.tsv"
     shell:
-        "gatk HaplotypeCaller"
-        "    --java-options '-Xmx3500M -Xms3500M'"
-        "    --dont-use-soft-clipped-bases"
+        "gatk3 -Xmx3500M -Xms3500M"
+        "    -T HaplotypeCaller"
+        "    --dontUseSoftClippedBases -l INFO"
         "    --dbsnp {config[dbsnp]}"
-        "    --minimum-mapping-quality {params.mmq}"
-        "    --emit-ref-confidence GVCF"
-        "    --min-base-quality-score {config[min_base_quality_score]}"
+        "    -mmq {params.mmq}"
+        "    -ERC BP_RESOLUTION"
+        "    --min_base_quality_score {config[min_base_quality_score]}"
         "    {params.regionflag}"
         "    -R {config[ref]}"
         "    -I {input}"
-        "    -O {output}"
+        "    -o {output}"
+
+
