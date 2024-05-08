@@ -1,17 +1,22 @@
 # vim: syntax=python
 
-# The memory limit here can be insufficient if the size of each
-# GATK chunk is large (>10MB or so).
+# Basepair resolution depth profiles are used for extrapolation of mutation burden.
+# There are two tools for calculating this bp-res depth:
+#       1. GATK DepthOfCoverage
+#       2. samtools depths
+# GATK DepthOfCoverage is ~100x slower than samtools depth and gives comparable
+# output. Because of this, the two tools are parallelized differently. GATK uses
+# analysis_regions and samtools depths splits jobs per chromosome.
+
 rule depth_profile_region_summarize_per_sample:
     input:
+        config_yaml='scan.yaml',
         tab="depth_profile/joint_depth_matrix.tab.gz",
         tabidx="depth_profile/joint_depth_matrix.tab.gz.tbi"
     output:
         rda="depth_profile/{sample}_depth_table.rda"
     params:
-        sc_sample="{sample}",
-        bulk_sample=config['bulk_sample'],
-        genome=config['genome']
+        sc_sample="{sample}"
     benchmark:
         "depth_profile/benchmark_{sample}_region_summarize.txt"
     resources:
@@ -23,52 +28,74 @@ rule depth_profile_region_summarize_per_sample:
         # many real world runs. the max. memory used was 1555 MB per thread; did
         # not scale with number of samples in each batch, as expected. give 1800 MB,
         # a little extra headroom.
-        mem=lambda wildcards, input, threads: 1800 * threads
-    threads: config['digest_depth_n_cores']
+        mem_mb=lambda wildcards, input, threads: 1800 * threads
+    threads: 10
     shell:
         """
-        {config[scripts]}/digest_depth.R {input.tab} \
-            {params.sc_sample} {params.bulk_sample} {params.genome} \
+        {config[scripts]}/digest_depth.R \
+            {params.sc_sample} {input.config_yaml} {input.tab} \
             {output.rda} {threads}
         """
 
 
-rule callable_region_gather:
+rule depth_profile_make_arg_file:
     input:
-        expand("depth_profile/gatk_depthofcoverage/chunk{gatk_chunk}.txt",
-            gatk_chunk=range(1, config['gatk_chunks']+1))
+        files=lambda wildcards: expand("depth_profile/{{depth_method}}/region_{analysis_region}.txt",
+            analysis_region=config['analysis_regions'] if wildcards.depth_method == "gatkdocov" else config['chrs'])
+    output:
+        argfile="depth_profile/{depth_method}_region_arg_file.txt"
+    localrule: True
+    run:
+        with open(output.argfile, 'w') as f:
+            for infile in input.files:
+                f.write(str(infile) + "\n")
+
+
+rule depth_profile_gather:
+    input:
+        # There may be 1000s of regions (and thus files) in larger projects.  There
+        # is a limit to how long a command line can be, so read the file names from
+        # a file rather than pasting them into a command.
+        argfile="depth_profile/" + config['depth_method'] + "_region_arg_file.txt",
+        files=lambda wildcards: expand("depth_profile/{depth_method}/region_{analysis_region}.txt",
+            depth_method=config['depth_method'],
+            analysis_region=config['analysis_regions'] if config['depth_method'] == "gatkdocov" else config['chrs'])
     output:
         tabgz="depth_profile/joint_depth_matrix.tab.gz",
         tabidx="depth_profile/joint_depth_matrix.tab.gz.tbi"
+    log:
+        "depth_profile/joint_depth_matrix.log"
     benchmark:
         "depth_profile/benchmark_joint_depth_matrix.txt"
     threads: 4
     resources:
         mem=1000
     shell:
+        # Use the header from the first file; they should all be identical
         """
-        (grep '^#' {input[0]} ; cat {input} | grep -v '^#') \
-            | bgzip --threads {threads} -c > {output.tabgz}
+        (grep -m1 '^#' $(head -1 {input.argfile}) ; \
+         cat {input.argfile} | while read line; do \
+            tail -n +2 $line ; \
+         done) \
+        | bgzip --threads {threads} -c > {output.tabgz}
         tabix -p vcf -S 1 {output.tabgz}
         """
 
 
-# Needs to match parallelization of GATK scattering, else the
-# callable regions will not match the actual genotyped area.
-# Also needs to match GATK filtering (mapping quality, additional
+# Needs to match GATK read filters (e.g., mapping quality, additional
 # default HaplotypeCaller read filters) to be meaningful.
-rule callable_region_scatter:
+rule gatkdocov_depth_profile_scatter:
     input:
-        scbam=config['bam_map'].values()
+        argfile="gatk/arg_file_bams.list"
     output:
-        tmp=temp("depth_profile/gatk_depthofcoverage/chunk{gatk_chunk}.tmp.txt"),
-        txt=temp("depth_profile/gatk_depthofcoverage/chunk{gatk_chunk}.txt")
-    params:
-        bams=" ".join([ "-I " + bam for bam in config['bam_map'].values() ]),
-        regionflag=lambda wildcards:
-            "-L " + config['gatk_regions'][int(wildcards.gatk_chunk) - 1],
+        tmp=temp("depth_profile/gatkdocov/region_{analysis_region}.tmp.txt"),
+        txt=temp("depth_profile/gatkdocov/region_{analysis_region}.txt")
+    log:
+        "depth_profile/gatkdocov/region_{analysis_region}.log"
     benchmark:
-        "depth_profile/gatk_depthofcoverage/benchmark_depthofcoverage_chunk{gatk_chunk}.txt"
+        "depth_profile/gatkdocov/benchmark_depthofcoverage.region_{analysis_region}.txt"
+    params:
+        regionflag="-L {analysis_region}"
     threads: 1
     resources:
         mem=6000
@@ -76,8 +103,8 @@ rule callable_region_scatter:
         """
         gatk DepthOfCoverage \
             --java-options '-Xmx5G -Xms5G' \
+            --arguments_file {input.argfile} \
             -R {config[ref]} \
-            {params.bams} \
             {params.regionflag} \
             --minimum-mapping-quality 60 \
             --read-filter NotSecondaryAlignmentReadFilter \
@@ -95,4 +122,123 @@ rule callable_region_scatter:
             --output-format TABLE \
             -O {output.tmp}
         {config[scripts]}/totab.depth_profile.sh {output.tmp} {output.txt} \
+        """
+
+
+rule make_samtoolsdepth_argfile:
+    input:
+        files=config['bam_map'].values()
+    output:
+        argfile="depth_profile/samtoolsdepth/bam_arg_file.txt"
+    localrule: True
+    run:
+        with open(output.argfile, 'w') as f:
+            for infile in input.files:
+                f.write(str(infile) + "\n")
+
+
+# Needs to match GATK read filters (e.g., mapping quality, additional
+# default HaplotypeCaller read filters) to be meaningful.
+rule samtoolsdepth_depth_profile_scatter:
+    input:
+        argfile="depth_profile/samtoolsdepth/bam_arg_file.txt"
+    output:
+        txt=temp("depth_profile/samtoolsdepth/region_{analysis_region}.txt")
+    log:
+        "depth_profile/samtoolsdepth/region_{analysis_region}.log"
+    benchmark:
+        "depth_profile/samtoolsdepth/benchmark_samtoolsdepth.region_{analysis_region}.txt"
+    params:
+        regionflag="-r {analysis_region}"
+    threads: 1
+    resources:
+        mem_mb=500
+    shell:
+        # First two lines create a header in the correct order
+        """
+        (echo -n "#chr pos "|tr ' ' '\t' ;
+         cat {input.argfile} | samtools samples | cut -f1 | tr '\n' '\t' | sed -e 's/\t$//' ;
+         echo "" ;
+         samtools depth \
+            -a \
+            -f {input.argfile} \
+            --reference {config[ref]} \
+            {params.regionflag} \
+            --min-MQ 60 \
+            --excl-flags UNMAP,SECONDARY,QCFAIL,DUP,SUPPLEMENTARY ) > {output.txt}
+        """
+
+
+# Build a genome file for bedtools to ensure consistent sorting order.
+rule binned_counts_make_genome_file:
+    input:
+        fai=config['ref'] + '.fai'   # the FASTA index is checked for in scan2 validate
+    output:
+        genome="depth_profile/binned_counts/genome_file_for_bedtools.txt"
+    localrule: True
+    resources:
+        mem_mb=100
+    shell:
+        """
+        cut -f1,2 {input.fai} > {output.genome}
+        """
+
+
+# Unlike depth_profile, which counts sequencing depth per position,
+# binned_counts counts the number of reads that start in a bin, which
+# is more of an indication of amplification uniformity and/or local copy
+# number.  the bins are derived such that they contain an equal number
+# of alignable positions using high quality read filters.
+rule binned_counts_profile:
+    input:
+        bam=lambda wildcards: config['bam_map'][wildcards.sample],
+        bins=config['resources'] + "/binned_counts/" + config['genome'] + "/bins_mapq60_width1000.bed.gz",
+        genome="depth_profile/binned_counts/genome_file_for_bedtools.txt"
+    output:
+        tab="depth_profile/binned_counts/{sample}.tab.gz",
+        idx="depth_profile/binned_counts/{sample}.tab.gz.tbi"
+    log:
+        "depth_profile/binned_counts/{sample}.log"
+    benchmark:
+        "depth_profile/binned_counts/{sample}.benchmark.txt"
+    params:
+        # Technically binned_counts is for assessing amplification, so we really
+        # want the whole genome analyzed even if the user only wants to call
+        # mutations on a subset. However, this prevents fast test/demo runs (e.g.,
+        # analyze chr22:30Mb-31Mb. So instead of always surveying the whole genome,
+        # at least analyze the chromosomes present in the analysis set. This gives
+        # some indication of quality (e.g., MAPD can be computed although it won't
+        # necessarily match the genome-wide MAPD).
+        chrs_as_regions=' '.join(config['chrs'])
+    threads: 1
+    resources:
+        mem_mb=1000
+    shell:
+        # Slightly odd required read flags:
+        #       -f 2 - read must be a proper pair orientation
+        #       -f 3856 - read must NOT be:
+        #           * reverse strand
+        #           * secondary alignment
+        #           * QC fail
+        #           * PCR duplicate
+        #           * supplementary alignment
+        # The reason for the reverse strand filter is that the binning method only
+        # simulates forward strand reads. Presumably, reverse strand would have
+        # nearly identical (if not exactly identical) mappability as the forward
+        # strand, but we do this anyway to exactly match the process.
+        """
+        (echo "#chr start end count" | tr ' ' '\t' ;
+         samtools view \
+             -f 2 -F 3856 \
+             --min-MQ 60 \
+             {input.bam} \
+             {params.chrs_as_regions} \
+         | awk 'BEGIN {{ OFS="\t"; }}{{ print $3, $4-1, $4, NR; }}'\
+         | bedtools intersect -sorted -c \
+             -a {input.bins} \
+             -b /dev/stdin \
+             -g {input.genome} \
+         | cut -f1-3,5 ) \
+         | bgzip -c > {output.tab}
+         tabix -p bed {output.tab}
         """

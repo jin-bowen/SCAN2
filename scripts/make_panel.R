@@ -2,12 +2,12 @@
 
 args <- commandArgs(trailingOnly=TRUE)
 if (!(length(args) %in% 4:5))
-    stop("usage: make_panel.R input.tab.gz metadata.csv output.tab genome [n.cores]")
+    stop("usage: make_panel.R input.tab.gz metadata.csv scan2config.yaml output.tab [n.cores]")
 
 inf <- args[1]
 metaf <- args[2]
-outf <- args[3]
-genome <- args[4]
+configf <- args[3]
+outf <- args[4]
 n.cores <- 1
 if (length(args) == 5)
     n.cores <- as.integer(args[5])
@@ -110,10 +110,12 @@ meta <- data.table::fread(metaf)
 cat("Bulks: ")
 print(meta[amp=='bulk']$sample)
 
-# GRanges intervals for chunked pipeline
-genome.seqinfo <- scan2::genome.string.to.seqinfo.object(genome)
-grs <- tileGenome(seqlengths=genome.seqinfo[seqlevels(genome.seqinfo)[1:22]],
-                  tilewidth=10e6, cut.last.tile.in.chrom=TRUE)
+# dummy.object only used to build GRanges intervals for chunked pipeline
+config <- scan2::read.config(configf)
+config$bulk_sample <- 'PLACEHOLDER'
+config$sex <- 'male'
+dummy.object <- scan2::make.scan(config=config)
+grs <- scan2::analysis.set.tiling.for.parallelization(object=dummy.object)
 
 # map donor <-> sample IDs
 dmap <- meta$donor   

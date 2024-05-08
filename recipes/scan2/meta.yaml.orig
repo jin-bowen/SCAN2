@@ -1,0 +1,49 @@
+package:
+    name: scan2
+<<<<<<< HEAD
+    version: "1.0"
+=======
+    version: "1.2.13"
+    githash: {{ GIT_FULL_HASH }}
+>>>>>>> 18f81f85bc32c345e57ede175bdf5f60846fdf7c
+
+build:
+    number: 7
+
+requirements:
+    run:
+<<<<<<< HEAD
+      - python=3.8
+      - r-base=4.1
+=======
+      - python
+      - r-base
+>>>>>>> 18f81f85bc32c345e57ede175bdf5f60846fdf7c
+      - snakemake
+      - java-jdk=8
+      - mamba
+      - drmaa
+      - shapeit
+      - eagle-phase
+      - gatk=3.8
+      - gatk4
+      - samtools
+      - pysam
+      - bedtools
+      - htslib
+<<<<<<< HEAD
+      - bcftools
+      - r-scan2
+=======
+      - bcftools>=1.19   # 1.19 is necessary for bcftools view -AA to remove <NON_REF>
+      - r-scan2>=1.2.11
+>>>>>>> 18f81f85bc32c345e57ede175bdf5f60846fdf7c
+      - shyaml
+      - r-argparse
+
+source:
+    git_url: https://github.com/parklab/SCAN2.git
+
+about:
+    home: https://github.com/parklab/SCAN2
+    summary: Somatic SNV and indel genotyper for PTA-amplified single cells

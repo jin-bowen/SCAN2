@@ -1,0 +1,118 @@
+# vim: syntax=python
+
+# shapeit requires an unzipped VCF file
+rule shapeit_prepare:
+    input:
+        snv_vcf="shapeit/{chr}/analyzable_sites.mmq60.filtered_bulk_snv_only.qual_cutoff.vcf",
+        indel_vcf="shapeit/{chr}/analyzable_sites.mmq60.filtered_bulk_indel_only.qual_cutoff.vcf",
+    output:
+        vcf="shapeit/{chr}/final_for_phasing.analyzable_sites.mmq60.vcf"
+    log:
+        "shapeit/{chr}/final_for_phasing.analyzable_sites.mmq60.log"
+    benchmark:
+        "shapeit/{chr}/final_for_phasing.analyzable_sites.mmq60.benchmark.txt"
+    localrule: True
+    resources:
+        mem_mb=250
+    shell:
+        """
+        (bcftools concat \
+             {input.snv_vcf} {input.indel_vcf} \
+         | bcftools sort --max-mem={resources.mem_mb}M \
+         | bcftools norm \
+             --multiallelics +both \
+             --do-not-normalize \
+             -Ov -o {output.vcf}) >& {log}
+        """
+
+ruleorder: phase_chrY > shapeit_scatter
+
+rule shapeit_scatter:
+    input:
+        vcf="shapeit/{chr}/final_for_phasing.analyzable_sites.mmq60.vcf"
+    output:
+        vcf=temp("shapeit/{chr}/phased.tmp.vcf"),
+    log:
+        "shapeit/{chr}/shapeit.log"
+    benchmark:
+        "shapeit/{chr}/benchmark_phaser.tsv"
+    params:
+        excludefile="shapeit/{chr}/shapeit_check.snp.strand.exclude",
+        tmpout="shapeit/{chr}/{chr}.phased",
+        checklog="shapeit/{chr}/shapeit_check.log",
+        phaselog="shapeit/{chr}/shapeit_phase.log",
+        convertlog="shapeit/{chr}/shapeit_convert.log",
+        gmap="genetic_map_chr{chr}",
+        hap="1000GP_Phase3_chr{chr}",
+        leg="1000GP_Phase3_chr{chr}",
+        # the genetic map is named genetic_map_chrX_nonPAR_combined_b37.txt
+        gmap_extra_x=lambda wildcards: '_nonPAR' if wildcards.chr == 'X' else '',
+        # the hap file is named 1000GP_Phase3_chrX_NONPAR.hap.gz
+        extra_x=lambda wildcards: '_NONPAR' if wildcards.chr == 'X' else '',
+        xflag=lambda wildcards: '--chrX' if wildcards.chr == 'X' else ''
+    threads: 1   # threading appears to have no impact on runtime
+    resources:
+        mem_mb=4000
+    shell:
+        # Note the "|| true" after shapeit -check: this is because shapeit
+        # -check returns non-0 when it finds any number of problematic SNPs.
+        # This CAN be dangerous as we're avoiding Snakemake's pipefail error
+        # detection method.
+        # The odd seed values are to match one arbitrary historical run.
+        """
+        shapeit -check \
+            --input-vcf={input.vcf} \
+            --output-log {params.checklog} \
+            --seed 1649118769 \
+            -M {config[shapeit_refpanel]}/{params.gmap}{params.gmap_extra_x}_combined_b37.txt \
+            --input-ref {config[shapeit_refpanel]}/{params.hap}{params.extra_x}.hap.gz \
+                {config[shapeit_refpanel]}/{params.leg}{params.extra_x}.legend.gz \
+                {config[shapeit_refpanel]}/1000GP_Phase3.sample || true
+        shapeit \
+            --thread {threads} \
+            --input-vcf={input.vcf} \
+            --output-log {params.phaselog} \
+            --seed 1649118772 \
+            -M {config[shapeit_refpanel]}/{params.gmap}{params.gmap_extra_x}_combined_b37.txt \
+            --input-ref {config[shapeit_refpanel]}/{params.hap}{params.extra_x}.hap.gz \
+                {config[shapeit_refpanel]}/{params.leg}{params.extra_x}.legend.gz \
+                {config[shapeit_refpanel]}/1000GP_Phase3.sample \
+            --exclude-snp {params.excludefile} \
+            {params.xflag} \
+            -O {params.tmpout} 
+        shapeit -convert \
+            --seed 1649118812 \
+            --output-log {params.convertlog} \
+            --input-haps {params.tmpout} --output-vcf {output.vcf}
+        """
+
+
+# SHAPEIT does not write a well-formed VCF header. Fix the header in
+# this rule.
+rule shapeit_postprocess:
+    input:
+        # Take the header from this file
+        vcf="shapeit/{chr}/final_for_phasing.analyzable_sites.mmq60.vcf",
+        # And add it to this file
+        phasedvcf="shapeit/{chr}/phased.tmp.vcf"
+    output:
+        header=temp("shapeit/{chr}/header.txt"),
+        vcf=temp("shapeit/{chr}/phased.vcf")
+    benchmark:
+        "shapeit/{chr}/postprocess.benchmark.txt"
+    localrule: True
+    threads: 1
+    resources:
+        mem_mb=250
+    shell:
+        """
+        bcftools view \
+            --header-only \
+            --output-type v \
+            --output {output.header} \
+            {input.vcf}
+        bcftools reheader \
+            --header {output.header} \
+            --output {output.vcf} \
+            {input.phasedvcf}
+        """

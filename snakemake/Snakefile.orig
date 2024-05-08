@@ -1,0 +1,57 @@
+# vim: syntax=python
+
+wildcard_constraints:
+    chr='|'.join(str(x) for x in config['chrs']),
+    gatk_chunk="\d+",
+    gatk_mmq="\d+",
+    phaser="shapeit|eagle",
+    depth_method="gatkdocov|samtoolsdepth",
+    muttype='snv|indel',
+    passtype='pass|rescue'
+
+print("SCAN2 version=" + config['scan2_version'] + ", buildnum=" + str(config['scan2_buildnum']) + ", githash=" + config['scan2_githash'])
+
+if config['analysis'] == 'call_mutations':
+    include: "snakefile.call_mutations"
+    rule call_mutations:
+        input:
+<<<<<<< HEAD
+            expand("call_mutations/{sample}/scan2_object.rda",
+=======
+            "call_mutations_collected_benchmarks.txt",
+            objects=lambda wildcards: expand("call_mutations/{sample}/scan2_object.rda",
+>>>>>>> 18f81f85bc32c345e57ede175bdf5f60846fdf7c
+                sample=config['sc_bams'].keys())
+        default_target: True
+
+if config['analysis'] == 'makepanel':
+    include: "snakefile.makepanel"
+    rule makepanel:
+        input:
+            "panel/panel.tab.gz"
+
+
+if config['analysis'] == 'joint_panel':
+    include: "snakefile.makepanel_joint"
+    rule makepanel:
+        input:
+            "panel/panel.tab.gz"
+
+
+if config['analysis'] == 'rescue':
+    include: "snakefile.rescue"
+    rule rescue_batch:
+        input:
+            "rescued_muts.txt",
+            "sig_homogeneity_tests.txt",
+            expand("objects/{sample}_scan2_object_rescue.rda",
+                sample=config['scan2_objects'].keys())
+
+if config['analysis'] == 'permtool':
+    include: "snakefile.permtool"
+    rule permtool:
+        input:
+            expand("perms_{muttype}_{passtype}.rda",
+                muttype=[ 'snv', 'indel' ], passtype=[ 'pass', 'rescue' ]),
+            expand("seedinfo_{muttype}_{passtype}.rda",
+                muttype=[ 'snv', 'indel' ], passtype=[ 'pass', 'rescue' ])

@@ -5,16 +5,20 @@ wildcard_constraints:
     gatk_chunk="\d+",
     gatk_mmq="\d+",
     phaser="shapeit|eagle",
+    depth_method="gatkdocov|samtoolsdepth",
     muttype='snv|indel',
     passtype='pass|rescue'
 
+print("SCAN2 version=" + config['scan2_version'] + ", buildnum=" + str(config['scan2_buildnum']) + ", githash=" + config['scan2_githash'])
 
 if config['analysis'] == 'call_mutations':
     include: "snakefile.call_mutations"
     rule call_mutations:
         input:
-            expand("call_mutations/{sample}/scan2_object.rda",
+            "call_mutations_collected_benchmarks.txt",
+            objects=lambda wildcards: expand("call_mutations/{sample}/scan2_object.rda",
                 sample=config['sc_bams'].keys())
+        default_target: True
 
 if config['analysis'] == 'makepanel':
     include: "snakefile.makepanel"

@@ -1,0 +1,22 @@
+# vim: syntax=python
+
+ruleorder: copy_user_vcf > gatk_gather
+
+rule copy_user_vcf:
+    input:
+        vcf=config['gatk_vcf'],
+        idx=config['gatk_vcf'] + '.idx'
+    output:
+        vcf="gatk/hc_raw.mmq60.vcf",
+        idx="gatk/hc_raw.mmq60.vcf.idx"
+    resources:
+<<<<<<< HEAD
+        mem=500
+=======
+        mem_mb=250
+>>>>>>> 18f81f85bc32c345e57ede175bdf5f60846fdf7c
+    shell:
+        """
+        cp -n {input.vcf} {output.vcf}
+        cp -n {input.idx} {output.idx}
+        """
