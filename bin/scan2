@@ -35,6 +35,7 @@ scan2_param_defaults = {
     'genome': 'hs37d5',
     'sex': None,
     'chrY': None,
+    'resources': None,
     'is_started': False,
     'gatk': 'gatk3_joint',
     'abmodel_method': 'grid_search',    # or gradient_descent
@@ -220,10 +221,10 @@ class Analysis:
         # handling. Second pass will tally updates and inform.
         new_cfg = {}
         for k, v in vars(args).items():
+
             if v is not None:
                 for k2, v2 in self.handle_special(k, v).items():
                     new_cfg[k2] = v2
-        
         # unusually special updates
         # 1. make the default value for chrs/gatk
         # regions when the user specifies the reference FASTA. But only
@@ -240,19 +241,20 @@ class Analysis:
         if 'ref' in new_cfg or 'ref' in self.cfg:
             ref = new_cfg['ref'] if 'ref' in new_cfg else self.cfg['ref']
             new_cfg['chrY'] = get_chrY_from_ref(ref)
-
         updates = 0
         for k, v in new_cfg.items():
             if k in self.cfg.keys() and v is not None and self.cfg[k] != v:
+
                 if args.verbose:
                     print("Updating %s: %s -> %s" % (k, str(self.cfg[k]), str(v)))
+                    print(k,v)
                 if k in scan2_file_defaults and type(v) == str:
+                    print("default")
                     # only top-level files are automatically converted,
                     # deeper files require handle_special().
                     v = readable_file(v)   # returns the absolute path
                 self.cfg[k] = v
                 updates = updates + 1
-
         # 2. Special update: sample -> bam map
         if updates > 0:
             tups = []
@@ -991,7 +993,7 @@ if __name__ == "__main__":
         help='Path to SCAN2 script files.  Usually points to an installed '
             'set of files.')
     config_parser.add_argument('--resources', metavar='PATH',
-        default='/opt/anaconda1anaconda2anaconda3/lib/scan2',
+        default='/n/scratch/users/b/boj924/SCAN2-joe/resources',
         help='Path to SCAN2 resource.  Usually points to an installed '
             'set of files.')
 
