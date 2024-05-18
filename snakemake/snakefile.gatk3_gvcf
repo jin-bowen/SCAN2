@@ -54,8 +54,8 @@ rule gatk_combinegvcfs:
     benchmark:
         "gatk/combinegvcfs_benchmark.mmq{gatk_mmq}.region_{analysis_region}.tsv"
     params:
-        memreq=lambda wildcards, input, output, threads, resources: str(int(resources.mem_mb/2) - 500) + "M"
-        infiles=lambda wildcards, input.gvcfs: ' '.join([ "-V " + f for f in input.gvcfs ])
+        memreq=lambda wildcards, input, output, threads, resources: str(int(resources.mem_mb/2) - 500) + "M",
+        infiles=lambda wildcards, input: ' '.join([ "-V " + f for f in input.gvcfs ])
     threads: 1
     resources:
         # This likely needs to scale with number of input BAMs.  1500MB for 5 ~30X BAMs.
