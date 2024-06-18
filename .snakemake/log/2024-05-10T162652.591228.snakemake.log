@@ -1,0 +1,395 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 4
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+copy_fasta                              1
+fai_index                               1
+gather_false_positive_alignments        1
+make_bins                               1
+profile_nuc_content                     1
+split_genome_by_contig                  1
+total                                   7
+
+Select jobs to execute...
+
+[Fri May 10 16:26:54 2024]
+localrule copy_fasta:
+    input: /n/data1/bwh/pathology/miller/lab/ref/chm13v2.0/chm13v2.0.fa
+    output: original_fasta/chm13v2.0.fa
+    log: original_fasta/chm13v2.0.fa.log
+    jobid: 3
+    benchmark: original_fasta/chm13v2.0.fa.benchmark.txt
+    reason: Missing output files: original_fasta/chm13v2.0.fa
+    resources: mem_mb=6020, mem_mib=5742, disk_mb=6020, disk_mib=5742, tmpdir=/tmp
+
+[Fri May 10 16:26:59 2024]
+Finished job 3.
+1 of 7 steps (14%) done
+Select jobs to execute...
+
+[Fri May 10 16:27:00 2024]
+rule fai_index:
+    input: original_fasta/chm13v2.0.fa
+    output: original_fasta/chm13v2.0.fa.fai
+    log: original_fasta/samtools_faidx.log
+    jobid: 4
+    benchmark: original_fasta/samtools_faidx.benchmark.txt
+    reason: Missing output files: original_fasta/chm13v2.0.fa.fai; Input files updated by another job: original_fasta/chm13v2.0.fa
+    resources: mem_mb=4000, mem_mib=3815, disk_mb=6020, disk_mib=5742, tmpdir=<TBD>
+
+Submitted job 4 with external jobid 'Submitted batch job 38032745'.
+
+[Fri May 10 16:27:12 2024]
+checkpoint split_genome_by_contig:
+    input: original_fasta/chm13v2.0.fa
+    output: split_genome
+    log: split_genome/split_genome_by_contig.log
+    jobid: 2
+    benchmark: split_genome/split_genome_by_contig.benchmark.txt
+    reason: Missing output files: split_genome; Input files updated by another job: original_fasta/chm13v2.0.fa
+    resources: mem_mb=1000, mem_mib=954, disk_mb=6020, disk_mib=5742, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 2 with external jobid 'Submitted batch job 38032746'.
+[Fri May 10 16:33:04 2024]
+Finished job 4.
+2 of 7 steps (29%) done
+[Fri May 10 16:44:45 2024]
+Finished job 2.
+3 of 7 steps (43%) done
+Select jobs to execute...
+
+[Fri May 10 16:44:45 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr2.fa
+    output: synthetic_reads/chr2/forward.fasta, synthetic_reads/chr2/reverse.fasta
+    log: synthetic_reads/chr2/gen_paired_reads.log
+    jobid: 58
+    benchmark: synthetic_reads/chr2/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr2/forward.fasta
+    wildcards: contig=chr2
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 58 with external jobid 'Submitted batch job 38033800'.
+
+[Fri May 10 16:44:45 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr7.fa
+    output: synthetic_reads/chr7/forward.fasta, synthetic_reads/chr7/reverse.fasta
+    log: synthetic_reads/chr7/gen_paired_reads.log
+    jobid: 90
+    benchmark: synthetic_reads/chr7/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr7/forward.fasta
+    wildcards: contig=chr7
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 90 with external jobid 'Submitted batch job 38033801'.
+
+[Fri May 10 16:44:45 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr5.fa
+    output: synthetic_reads/chr5/forward.fasta, synthetic_reads/chr5/reverse.fasta
+    log: synthetic_reads/chr5/gen_paired_reads.log
+    jobid: 82
+    benchmark: synthetic_reads/chr5/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr5/forward.fasta
+    wildcards: contig=chr5
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 82 with external jobid 'Submitted batch job 38033802'.
+
+[Fri May 10 16:44:46 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr13.fa
+    output: synthetic_reads/chr13/forward.fasta, synthetic_reads/chr13/reverse.fasta
+    log: synthetic_reads/chr13/gen_paired_reads.log
+    jobid: 30
+    benchmark: synthetic_reads/chr13/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr13/forward.fasta
+    wildcards: contig=chr13
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 30 with external jobid 'Submitted batch job 38033803'.
+[Fri May 10 17:01:49 2024]
+Finished job 30.
+4 of 157 steps (3%) done
+Select jobs to execute...
+
+[Fri May 10 17:01:49 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chrY.fa
+    output: synthetic_reads/chrY/forward.fasta, synthetic_reads/chrY/reverse.fasta
+    log: synthetic_reads/chrY/gen_paired_reads.log
+    jobid: 110
+    benchmark: synthetic_reads/chrY/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chrY/forward.fasta
+    wildcards: contig=chrY
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 110 with external jobid 'Submitted batch job 38033943'.
+[Fri May 10 17:04:46 2024]
+Finished job 90.
+5 of 157 steps (3%) done
+Select jobs to execute...
+
+[Fri May 10 17:04:46 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr21.fa
+    output: synthetic_reads/chr21/forward.fasta, synthetic_reads/chr21/reverse.fasta
+    log: synthetic_reads/chr21/gen_paired_reads.log
+    jobid: 66
+    benchmark: synthetic_reads/chr21/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr21/forward.fasta
+    wildcards: contig=chr21
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 66 with external jobid 'Submitted batch job 38034180'.
+[Fri May 10 17:08:26 2024]
+Finished job 82.
+6 of 157 steps (4%) done
+Select jobs to execute...
+
+[Fri May 10 17:08:26 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr5/forward.fasta
+    output: synthetic_reads/chr5/forward_split
+    log: synthetic_reads/chr5/split_paired_reads_forward.log
+    jobid: 81
+    benchmark: synthetic_reads/chr5/split_paired_reads_forward.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr5/forward_split; Input files updated by another job: synthetic_reads/chr5/forward.fasta
+    wildcards: contig=chr5, direction=forward
+    resources: mem_mb=500, mem_mib=477, disk_mb=58469, disk_mib=55761, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 81 with external jobid 'Submitted batch job 38034211'.
+[Fri May 10 17:08:37 2024]
+Finished job 58.
+7 of 157 steps (4%) done
+Select jobs to execute...
+
+[Fri May 10 17:08:37 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr7/forward.fasta
+    output: synthetic_reads/chr7/forward_split
+    log: synthetic_reads/chr7/split_paired_reads_forward.log
+    jobid: 89
+    benchmark: synthetic_reads/chr7/split_paired_reads_forward.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr7/forward_split; Input files updated by another job: synthetic_reads/chr7/forward.fasta
+    wildcards: contig=chr7, direction=forward
+    resources: mem_mb=500, mem_mib=477, disk_mb=51546, disk_mib=49159, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 89 with external jobid 'Submitted batch job 38034212'.
+[Fri May 10 17:09:07 2024]
+Finished job 110.
+8 of 157 steps (5%) done
+Select jobs to execute...
+
+[Fri May 10 17:09:07 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr13/forward.fasta
+    output: synthetic_reads/chr13/forward_split
+    log: synthetic_reads/chr13/split_paired_reads_forward.log
+    jobid: 29
+    benchmark: synthetic_reads/chr13/split_paired_reads_forward.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr13/forward_split; Input files updated by another job: synthetic_reads/chr13/forward.fasta
+    wildcards: contig=chr13, direction=forward
+    resources: mem_mb=500, mem_mib=477, disk_mb=36612, disk_mib=34916, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 29 with external jobid 'Submitted batch job 38034214'.
+[Fri May 10 17:11:17 2024]
+Finished job 66.
+9 of 157 steps (6%) done
+Select jobs to execute...
+
+[Fri May 10 17:11:17 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr21/forward.fasta
+    output: synthetic_reads/chr21/forward_split
+    log: synthetic_reads/chr21/split_paired_reads_forward.log
+    jobid: 65
+    benchmark: synthetic_reads/chr21/split_paired_reads_forward.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr21/forward_split; Input files updated by another job: synthetic_reads/chr21/forward.fasta
+    wildcards: contig=chr21, direction=forward
+    resources: mem_mb=500, mem_mib=477, disk_mb=14513, disk_mib=13841, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 65 with external jobid 'Submitted batch job 38034232'.
+[Fri May 10 17:11:57 2024]
+Finished job 81.
+10 of 157 steps (6%) done
+Select jobs to execute...
+
+[Fri May 10 17:11:57 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr1.fa
+    output: synthetic_reads/chr1/forward.fasta, synthetic_reads/chr1/reverse.fasta
+    log: synthetic_reads/chr1/gen_paired_reads.log
+    jobid: 14
+    benchmark: synthetic_reads/chr1/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr1/forward.fasta
+    wildcards: contig=chr1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 14 with external jobid 'Submitted batch job 38034235'.
+[Fri May 10 17:18:37 2024]
+Finished job 29.
+11 of 158 steps (7%) done
+Select jobs to execute...
+
+[Fri May 10 17:18:38 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr3.fa
+    output: synthetic_reads/chr3/forward.fasta, synthetic_reads/chr3/reverse.fasta
+    log: synthetic_reads/chr3/gen_paired_reads.log
+    jobid: 74
+    benchmark: synthetic_reads/chr3/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr3/forward.fasta
+    wildcards: contig=chr3
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 74 with external jobid 'Submitted batch job 38034461'.
+[Fri May 10 17:18:38 2024]
+Finished job 65.
+12 of 159 steps (8%) done
+Select jobs to execute...
+
+[Fri May 10 17:18:38 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr11.fa
+    output: synthetic_reads/chr11/forward.fasta, synthetic_reads/chr11/reverse.fasta
+    log: synthetic_reads/chr11/gen_paired_reads.log
+    jobid: 22
+    benchmark: synthetic_reads/chr11/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr11/forward.fasta
+    wildcards: contig=chr11
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 22 with external jobid 'Submitted batch job 38034462'.
+[Fri May 10 17:19:18 2024]
+Finished job 89.
+13 of 160 steps (8%) done
+Select jobs to execute...
+
+[Fri May 10 17:19:18 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr7/reverse.fasta
+    output: synthetic_reads/chr7/reverse_split
+    log: synthetic_reads/chr7/split_paired_reads_reverse.log
+    jobid: 268
+    benchmark: synthetic_reads/chr7/split_paired_reads_reverse.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr7/reverse_split
+    wildcards: contig=chr7, direction=reverse
+    resources: mem_mb=500, mem_mib=477, disk_mb=51546, disk_mib=49159, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 268 with external jobid 'Submitted batch job 38034465'.
+[Fri May 10 17:31:58 2024]
+Finished job 268.
+14 of 161 steps (9%) done
+Select jobs to execute...
+
+[Fri May 10 17:31:59 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chrM.fa
+    output: synthetic_reads/chrM/forward.fasta, synthetic_reads/chrM/reverse.fasta
+    log: synthetic_reads/chrM/gen_paired_reads.log
+    jobid: 102
+    benchmark: synthetic_reads/chrM/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chrM/forward.fasta
+    wildcards: contig=chrM
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 102 with external jobid 'Submitted batch job 38034898'.
+[Fri May 10 17:34:59 2024]
+Finished job 102.
+15 of 196 steps (8%) done
+Select jobs to execute...
+
+[Fri May 10 17:34:59 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr16.fa
+    output: synthetic_reads/chr16/forward.fasta, synthetic_reads/chr16/reverse.fasta
+    log: synthetic_reads/chr16/gen_paired_reads.log
+    jobid: 42
+    benchmark: synthetic_reads/chr16/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr16/forward.fasta
+    wildcards: contig=chr16
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 42 with external jobid 'Submitted batch job 38034923'.
+[Fri May 10 17:42:59 2024]
+Finished job 14.
+16 of 196 steps (8%) done
+Select jobs to execute...
+
+[Fri May 10 17:42:59 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr1/forward.fasta
+    output: synthetic_reads/chr1/forward_split
+    log: synthetic_reads/chr1/split_paired_reads_forward.log
+    jobid: 13
+    benchmark: synthetic_reads/chr1/split_paired_reads_forward.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr1/forward_split; Input files updated by another job: synthetic_reads/chr1/forward.fasta
+    wildcards: contig=chr1, direction=forward
+    resources: mem_mb=500, mem_mib=477, disk_mb=79854, disk_mib=76155, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 13 with external jobid 'Submitted batch job 38034963'.
+[Fri May 10 17:43:39 2024]
+Finished job 22.
+17 of 196 steps (9%) done
+Select jobs to execute...
+
+[Fri May 10 17:43:39 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr11/forward.fasta
+    output: synthetic_reads/chr11/forward_split
+    log: synthetic_reads/chr11/split_paired_reads_forward.log
+    jobid: 21
+    benchmark: synthetic_reads/chr11/split_paired_reads_forward.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr11/forward_split; Input files updated by another job: synthetic_reads/chr11/forward.fasta
+    wildcards: contig=chr11, direction=forward
+    resources: mem_mb=500, mem_mib=477, disk_mb=43603, disk_mib=41584, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 21 with external jobid 'Submitted batch job 38035170'.
+[Fri May 10 17:45:49 2024]
+Finished job 21.
+18 of 196 steps (9%) done
+Select jobs to execute...
+
+[Fri May 10 17:45:50 2024]
+rule gen_paired_reads:
+    input: /home/boj924/scan2_binning/gen_paired_reads, split_genome/chr9.fa
+    output: synthetic_reads/chr9/forward.fasta, synthetic_reads/chr9/reverse.fasta
+    log: synthetic_reads/chr9/gen_paired_reads.log
+    jobid: 98
+    benchmark: synthetic_reads/chr9/gen_paired_reads.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr9/forward.fasta
+    wildcards: contig=chr9
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 98 with external jobid 'Submitted batch job 38035367'.
+Waiting at most 5 seconds for missing files.
+MissingOutputException in rule gen_paired_reads in file /home/boj924/scan2_binning/Snakefile, line 127:
+Job 42  completed successfully, but some output files are missing. Missing files after 5 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+synthetic_reads/chr16/gen_paired_reads.benchmark.txt
+Removing output files of failed job gen_paired_reads since they might be corrupted:
+synthetic_reads/chr16/forward.fasta, synthetic_reads/chr16/reverse.fasta
+[Fri May 10 17:47:39 2024]
+Finished job 13.
+19 of 197 steps (10%) done
+[Fri May 10 17:50:20 2024]
+Finished job 74.
+20 of 198 steps (10%) done
+[Fri May 10 18:02:00 2024]
+Finished job 98.
+21 of 198 steps (11%) done
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-05-10T162652.591228.snakemake.log

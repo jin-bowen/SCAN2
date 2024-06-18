@@ -1,0 +1,522 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 4
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+bwa_mem                               190
+concat_parsed_tables                   25
+count_false_positive_alignments        25
+gather_false_positive_alignments        1
+gen_paired_reads                        3
+make_bins                               1
+make_bins_per_contig                   25
+make_false_positive_bed                25
+parse_alignments                      233
+profile_nuc_content                     1
+split_paired_reads                      9
+total                                 539
+
+Select jobs to execute...
+
+[Mon May 13 09:56:46 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr3/forward_split/00015.fasta, synthetic_reads/chr3/reverse_split/00015.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr3/aligned/00015.sam
+    log: synthetic_reads/chr3/aligned/00015.log
+    jobid: 325
+    benchmark: synthetic_reads/chr3/aligned/00015.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr3/aligned/00015.sam
+    wildcards: contig=chr3, chunk=00015
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 325 with external jobid 'Submitted batch job 38139134'.
+
+[Mon May 13 09:56:46 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr1/forward_split/00023.fasta, synthetic_reads/chr1/reverse_split/00023.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr1/aligned/00023.sam
+    log: synthetic_reads/chr1/aligned/00023.log
+    jobid: 59
+    benchmark: synthetic_reads/chr1/aligned/00023.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr1/aligned/00023.sam
+    wildcards: contig=chr1, chunk=00023
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 59 with external jobid 'Submitted batch job 38139135'.
+
+[Mon May 13 09:56:47 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr5/forward_split/00017.fasta, synthetic_reads/chr5/reverse_split/00017.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr5/aligned/00017.sam
+    log: synthetic_reads/chr5/aligned/00017.log
+    jobid: 377
+    benchmark: synthetic_reads/chr5/aligned/00017.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr5/aligned/00017.sam
+    wildcards: contig=chr5, chunk=00017
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 377 with external jobid 'Submitted batch job 38139136'.
+
+[Mon May 13 09:56:47 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr1/forward_split/00020.fasta, synthetic_reads/chr1/reverse_split/00020.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr1/aligned/00020.sam
+    log: synthetic_reads/chr1/aligned/00020.log
+    jobid: 53
+    benchmark: synthetic_reads/chr1/aligned/00020.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr1/aligned/00020.sam
+    wildcards: contig=chr1, chunk=00020
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 53 with external jobid 'Submitted batch job 38139137'.
+[Mon May 13 10:17:27 2024]
+Finished job 325.
+1 of 539 steps (0.2%) done
+Select jobs to execute...
+
+[Mon May 13 10:17:27 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr15/forward_split/00002.fasta, synthetic_reads/chr15/reverse_split/00002.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr15/aligned/00002.sam
+    log: synthetic_reads/chr15/aligned/00002.log
+    jobid: 189
+    benchmark: synthetic_reads/chr15/aligned/00002.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr15/aligned/00002.sam
+    wildcards: contig=chr15, chunk=00002
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 189 with external jobid 'Submitted batch job 38140024'.
+[Mon May 13 10:21:07 2024]
+Finished job 59.
+2 of 539 steps (0.4%) done
+Select jobs to execute...
+
+[Mon May 13 10:21:07 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr13/forward_split/00011.fasta, synthetic_reads/chr13/reverse_split/00011.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr13/aligned/00011.sam
+    log: synthetic_reads/chr13/aligned/00011.log
+    jobid: 177
+    benchmark: synthetic_reads/chr13/aligned/00011.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr13/aligned/00011.sam
+    wildcards: contig=chr13, chunk=00011
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=18738, disk_mib=17870, tmpdir=<TBD>
+
+Submitted job 177 with external jobid 'Submitted batch job 38140204'.
+[Mon May 13 10:21:13 2024]
+Finished job 53.
+3 of 539 steps (1%) done
+Select jobs to execute...
+
+[Mon May 13 10:21:13 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr7/forward_split/00015.fasta, synthetic_reads/chr7/reverse_split/00015.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr7/aligned/00015.sam
+    log: synthetic_reads/chr7/aligned/00015.log
+    jobid: 451
+    benchmark: synthetic_reads/chr7/aligned/00015.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr7/aligned/00015.sam
+    wildcards: contig=chr7, chunk=00015
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 451 with external jobid 'Submitted batch job 38140205'.
+[Mon May 13 10:22:47 2024]
+Finished job 377.
+4 of 539 steps (1%) done
+Select jobs to execute...
+
+[Mon May 13 10:22:47 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr6/forward_split/00000.fasta, synthetic_reads/chr6/reverse_split/00000.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr6/aligned/00000.sam
+    log: synthetic_reads/chr6/aligned/00000.log
+    jobid: 383
+    benchmark: synthetic_reads/chr6/aligned/00000.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr6/aligned/00000.sam
+    wildcards: contig=chr6, chunk=00000
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22791, disk_mib=21736, tmpdir=<TBD>
+
+Submitted job 383 with external jobid 'Submitted batch job 38140259'.
+[Mon May 13 10:30:28 2024]
+Finished job 177.
+5 of 539 steps (1%) done
+Select jobs to execute...
+
+[Mon May 13 10:30:28 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr6/forward_split/00015.fasta, synthetic_reads/chr6/reverse_split/00015.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr6/aligned/00015.sam
+    log: synthetic_reads/chr6/aligned/00015.log
+    jobid: 413
+    benchmark: synthetic_reads/chr6/aligned/00015.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr6/aligned/00015.sam
+    wildcards: contig=chr6, chunk=00015
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 413 with external jobid 'Submitted batch job 38140631'.
+[Mon May 13 10:44:39 2024]
+Finished job 383.
+6 of 539 steps (1%) done
+Select jobs to execute...
+
+[Mon May 13 10:44:39 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr8/forward_split/00009.fasta, synthetic_reads/chr8/reverse_split/00009.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr8/aligned/00009.sam
+    log: synthetic_reads/chr8/aligned/00009.log
+    jobid: 475
+    benchmark: synthetic_reads/chr8/aligned/00009.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr8/aligned/00009.sam
+    wildcards: contig=chr8, chunk=00009
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 475 with external jobid 'Submitted batch job 38140751'.
+[Mon May 13 10:46:19 2024]
+Finished job 189.
+7 of 539 steps (1%) done
+Select jobs to execute...
+
+[Mon May 13 10:46:19 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr8/forward_split/00012.fasta, synthetic_reads/chr8/reverse_split/00012.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr8/aligned/00012.sam
+    log: synthetic_reads/chr8/aligned/00012.log
+    jobid: 481
+    benchmark: synthetic_reads/chr8/aligned/00012.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr8/aligned/00012.sam
+    wildcards: contig=chr8, chunk=00012
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 481 with external jobid 'Submitted batch job 38140805'.
+[Mon May 13 10:47:00 2024]
+Finished job 451.
+8 of 539 steps (1%) done
+Select jobs to execute...
+
+[Mon May 13 10:47:00 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr15/forward_split/00009.fasta, synthetic_reads/chr15/reverse_split/00009.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr15/aligned/00009.sam
+    log: synthetic_reads/chr15/aligned/00009.log
+    jobid: 203
+    benchmark: synthetic_reads/chr15/aligned/00009.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr15/aligned/00009.sam
+    wildcards: contig=chr15, chunk=00009
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22713, disk_mib=21661, tmpdir=<TBD>
+
+Submitted job 203 with external jobid 'Submitted batch job 38140845'.
+[Mon May 13 10:57:40 2024]
+Finished job 413.
+9 of 539 steps (2%) done
+Select jobs to execute...
+
+[Mon May 13 10:57:40 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr5/forward_split/00005.fasta, synthetic_reads/chr5/reverse_split/00005.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr5/aligned/00005.sam
+    log: synthetic_reads/chr5/aligned/00005.log
+    jobid: 353
+    benchmark: synthetic_reads/chr5/aligned/00005.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr5/aligned/00005.sam
+    wildcards: contig=chr5, chunk=00005
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 353 with external jobid 'Submitted batch job 38141704'.
+[Mon May 13 11:09:21 2024]
+Finished job 203.
+10 of 539 steps (2%) done
+Select jobs to execute...
+
+[Mon May 13 11:09:21 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr9/forward_split/00002.fasta, synthetic_reads/chr9/reverse_split/00002.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr9/aligned/00002.sam
+    log: synthetic_reads/chr9/aligned/00002.log
+    jobid: 493
+    benchmark: synthetic_reads/chr9/aligned/00002.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr9/aligned/00002.sam
+    wildcards: contig=chr9, chunk=00002
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 493 with external jobid 'Submitted batch job 38142241'.
+[Mon May 13 11:13:01 2024]
+Finished job 475.
+11 of 539 steps (2%) done
+Select jobs to execute...
+
+[Mon May 13 11:13:01 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr2/forward_split/00005.fasta, synthetic_reads/chr2/reverse_split/00005.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr2/aligned/00005.sam
+    log: synthetic_reads/chr2/aligned/00005.log
+    jobid: 233
+    benchmark: synthetic_reads/chr2/aligned/00005.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr2/aligned/00005.sam
+    wildcards: contig=chr2, chunk=00005
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 233 with external jobid 'Submitted batch job 38142278'.
+[Mon May 13 11:13:41 2024]
+Finished job 481.
+12 of 539 steps (2%) done
+Select jobs to execute...
+
+[Mon May 13 11:13:41 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chrY/forward_split/00001.fasta, synthetic_reads/chrY/reverse_split/00001.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chrY/aligned/00001.sam
+    log: synthetic_reads/chrY/aligned/00001.log
+    jobid: 533
+    benchmark: synthetic_reads/chrY/aligned/00001.benchmark.txt
+    reason: Missing output files: synthetic_reads/chrY/aligned/00001.sam
+    wildcards: contig=chrY, chunk=00001
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 533 with external jobid 'Submitted batch job 38142291'.
+[Mon May 13 11:37:22 2024]
+Finished job 233.
+13 of 539 steps (2%) done
+Select jobs to execute...
+
+[Mon May 13 11:37:22 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr13/forward_split/00008.fasta, synthetic_reads/chr13/reverse_split/00008.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr13/aligned/00008.sam
+    log: synthetic_reads/chr13/aligned/00008.log
+    jobid: 171
+    benchmark: synthetic_reads/chr13/aligned/00008.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr13/aligned/00008.sam
+    wildcards: contig=chr13, chunk=00008
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 171 with external jobid 'Submitted batch job 38143485'.
+[Mon May 13 11:38:02 2024]
+Finished job 493.
+14 of 539 steps (3%) done
+Select jobs to execute...
+
+[Mon May 13 11:38:02 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr2/forward_split/00001.fasta, synthetic_reads/chr2/reverse_split/00001.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr2/aligned/00001.sam
+    log: synthetic_reads/chr2/aligned/00001.log
+    jobid: 225
+    benchmark: synthetic_reads/chr2/aligned/00001.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr2/aligned/00001.sam
+    wildcards: contig=chr2, chunk=00001
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 225 with external jobid 'Submitted batch job 38143538'.
+[Mon May 13 11:49:43 2024]
+Finished job 353.
+15 of 539 steps (3%) done
+Select jobs to execute...
+
+[Mon May 13 11:49:43 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr13/forward_split/00004.fasta, synthetic_reads/chr13/reverse_split/00004.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr13/aligned/00004.sam
+    log: synthetic_reads/chr13/aligned/00004.log
+    jobid: 163
+    benchmark: synthetic_reads/chr13/aligned/00004.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr13/aligned/00004.sam
+    wildcards: contig=chr13, chunk=00004
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 163 with external jobid 'Submitted batch job 38144583'.
+[Mon May 13 11:57:24 2024]
+Finished job 533.
+16 of 539 steps (3%) done
+Select jobs to execute...
+
+[Mon May 13 11:57:24 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr8/forward_split/00003.fasta, synthetic_reads/chr8/reverse_split/00003.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr8/aligned/00003.sam
+    log: synthetic_reads/chr8/aligned/00003.log
+    jobid: 463
+    benchmark: synthetic_reads/chr8/aligned/00003.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr8/aligned/00003.sam
+    wildcards: contig=chr8, chunk=00003
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 463 with external jobid 'Submitted batch job 38144755'.
+[Mon May 13 12:26:35 2024]
+Finished job 171.
+17 of 539 steps (3%) done
+Select jobs to execute...
+
+[Mon May 13 12:26:36 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr21/forward_split/00003.fasta, synthetic_reads/chr21/reverse_split/00003.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr21/aligned/00003.sam
+    log: synthetic_reads/chr21/aligned/00003.log
+    jobid: 285
+    benchmark: synthetic_reads/chr21/aligned/00003.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr21/aligned/00003.sam
+    wildcards: contig=chr21, chunk=00003
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 285 with external jobid 'Submitted batch job 38147839'.
+[Mon May 13 12:26:38 2024]
+Finished job 225.
+18 of 539 steps (3%) done
+Select jobs to execute...
+
+[Mon May 13 12:26:38 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr11/forward_split/00004.fasta, synthetic_reads/chr11/reverse_split/00004.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr11/aligned/00004.sam
+    log: synthetic_reads/chr11/aligned/00004.log
+    jobid: 103
+    benchmark: synthetic_reads/chr11/aligned/00004.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr11/aligned/00004.sam
+    wildcards: contig=chr11, chunk=00004
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 103 with external jobid 'Submitted batch job 38147842'.
+[Mon May 13 12:29:16 2024]
+Finished job 163.
+19 of 539 steps (4%) done
+Select jobs to execute...
+
+[Mon May 13 12:29:16 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr8/forward_split/00004.fasta, synthetic_reads/chr8/reverse_split/00004.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr8/aligned/00004.sam
+    log: synthetic_reads/chr8/aligned/00004.log
+    jobid: 465
+    benchmark: synthetic_reads/chr8/aligned/00004.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr8/aligned/00004.sam
+    wildcards: contig=chr8, chunk=00004
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 465 with external jobid 'Submitted batch job 38148035'.
+[Mon May 13 16:46:12 2024]
+Finished job 463.
+20 of 539 steps (4%) done
+Select jobs to execute...
+
+[Mon May 13 16:46:12 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr1/forward_split/00015.fasta, synthetic_reads/chr1/reverse_split/00015.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr1/aligned/00015.sam
+    log: synthetic_reads/chr1/aligned/00015.log
+    jobid: 43
+    benchmark: synthetic_reads/chr1/aligned/00015.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr1/aligned/00015.sam
+    wildcards: contig=chr1, chunk=00015
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 43 with external jobid 'Submitted batch job 38157384'.
+[Mon May 13 16:58:53 2024]
+Finished job 285.
+21 of 539 steps (4%) done
+Select jobs to execute...
+
+[Mon May 13 16:58:53 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr7/forward_split/00006.fasta, synthetic_reads/chr7/reverse_split/00006.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr7/aligned/00006.sam
+    log: synthetic_reads/chr7/aligned/00006.log
+    jobid: 433
+    benchmark: synthetic_reads/chr7/aligned/00006.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr7/aligned/00006.sam
+    wildcards: contig=chr7, chunk=00006
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 433 with external jobid 'Submitted batch job 38158198'.
+[Mon May 13 17:18:34 2024]
+Finished job 103.
+22 of 539 steps (4%) done
+Select jobs to execute...
+
+[Mon May 13 17:18:34 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr3/forward_split/00013.fasta, synthetic_reads/chr3/reverse_split/00013.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr3/aligned/00013.sam
+    log: synthetic_reads/chr3/aligned/00013.log
+    jobid: 321
+    benchmark: synthetic_reads/chr3/aligned/00013.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr3/aligned/00013.sam
+    wildcards: contig=chr3, chunk=00013
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 321 with external jobid 'Submitted batch job 38158660'.
+[Mon May 13 17:23:14 2024]
+Error in rule bwa_mem:
+    jobid: 465
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr8/forward_split/00004.fasta, synthetic_reads/chr8/reverse_split/00004.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr8/aligned/00004.sam
+    log: synthetic_reads/chr8/aligned/00004.log (check log file(s) for error details)
+    shell:
+        
+        set -euo pipefail 
+
+        module load gcc/6.2.0 bwa/0.7.17 samtools/1.13 sambamba/0.7.1 
+
+        ulimit -S -n 4096 
+
+        bwa mem -t 2             -v 3             -M             -K 100000000             -o 'synthetic_reads/chr8/aligned/00004.sam'             original_fasta/chm13v2.0.fa 'synthetic_reads/chr8/forward_split/00004.fasta' 'synthetic_reads/chr8/reverse_split/00004.fasta' >& 'synthetic_reads/chr8/aligned/00004.log'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 38148035
+
+Error executing rule bwa_mem on cluster (jobid: 465, external: Submitted batch job 38148035, jobscript: /n/scratch/users/b/boj924/SCAN2-joe/.snakemake/tmp.upudyxjk/snakejob.bwa_mem.465.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Mon May 13 17:52:56 2024]
+Finished job 321.
+23 of 539 steps (4%) done
+[Mon May 13 18:34:28 2024]
+Finished job 43.
+24 of 539 steps (4%) done
+[Mon May 13 19:03:10 2024]
+Error in rule bwa_mem:
+    jobid: 433
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr7/forward_split/00006.fasta, synthetic_reads/chr7/reverse_split/00006.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr7/aligned/00006.sam
+    log: synthetic_reads/chr7/aligned/00006.log (check log file(s) for error details)
+    shell:
+        
+        set -euo pipefail 
+
+        module load gcc/6.2.0 bwa/0.7.17 samtools/1.13 sambamba/0.7.1 
+
+        ulimit -S -n 4096 
+
+        bwa mem -t 2             -v 3             -M             -K 100000000             -o 'synthetic_reads/chr7/aligned/00006.sam'             original_fasta/chm13v2.0.fa 'synthetic_reads/chr7/forward_split/00006.fasta' 'synthetic_reads/chr7/reverse_split/00006.fasta' >& 'synthetic_reads/chr7/aligned/00006.log'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 38158198
+
+Error executing rule bwa_mem on cluster (jobid: 433, external: Submitted batch job 38158198, jobscript: /n/scratch/users/b/boj924/SCAN2-joe/.snakemake/tmp.upudyxjk/snakejob.bwa_mem.433.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-05-13T095639.976009.snakemake.log

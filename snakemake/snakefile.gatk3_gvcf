@@ -1,5 +1,9 @@
 # vim: syntax=python
 
+def memreq_function(wildcards, input, output, threads, resources):
+    return str(int(resources.mem_mb/2) - 500) + "M"
+
+
 rule gatk_genotypegvcfs:
     input:
         gvcf="gatk/hc_raw.mmq{gatk_mmq}.region_{analysis_region}.gvcf.gz"
@@ -10,7 +14,7 @@ rule gatk_genotypegvcfs:
     benchmark:
         "gatk/genotypegvcfs_benchmark.mmq{gatk_mmq}.region_{analysis_region}.tsv"
     params:
-        memreq=lambda wildcards, input, output, threads, resources: str(int(resources.mem_mb/2) - 500) + "M"
+        memreq=memreq_function
     resources:
         # This likely needs to scale with number of input BAMs. ~1500MB for 5 30X BAMs
         mem_mb=4000
@@ -44,7 +48,6 @@ rule make_gvcf_arg_file_per_region:
 
 rule gatk_combinegvcfs:
     input:
-        argfile="gatk/arg_file_gvcfs_mmq{gatk_mmq}.region_{analysis_region}.list",
         gvcfs=expand("gatk/{sample}/hc_raw.mmq{{gatk_mmq}}.region_{{analysis_region}}.gvcf.gz",
                      sample=config['bam_map'].keys())
     output:
@@ -54,8 +57,8 @@ rule gatk_combinegvcfs:
     benchmark:
         "gatk/combinegvcfs_benchmark.mmq{gatk_mmq}.region_{analysis_region}.tsv"
     params:
-        memreq=lambda wildcards, input, output, threads, resources: str(int(resources.mem_mb/2) - 500) + "M"
-        infiles=lambda wildcards, input.gvcfs: ' '.join([ "-V " + f for f in input.gvcfs ])
+        infiles=lambda wildcards, input: ' '.join([ "-V " + f for f in input ]),
+	memreq=memreq_function
     threads: 1
     resources:
         # This likely needs to scale with number of input BAMs.  1500MB for 5 ~30X BAMs.
@@ -74,7 +77,7 @@ rule gatk_scatter:
     input:
         bam=lambda wildcards: config['bam_map'][wildcards.sample]
     output:
-        gvcf=temp("gatk/{sample}/hc_raw.mmq{gatk_mmq}.region_{analysis_region}.gvcf.gz")
+        gvcf="gatk/{sample}/hc_raw.mmq{gatk_mmq}.region_{analysis_region}.gvcf.gz"
     log:
         "gatk/{sample}/hc_raw.mmq{gatk_mmq}.region_{analysis_region}.log"
     benchmark:

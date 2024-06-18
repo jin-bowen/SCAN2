@@ -1,0 +1,138 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 4
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+bwa_mem                               328
+concat_parsed_tables                   25
+count_false_positive_alignments        25
+gather_false_positive_alignments        1
+make_bins                               1
+make_bins_per_contig                   25
+make_false_positive_bed                25
+parse_alignments                      328
+profile_nuc_content                     1
+total                                 760
+
+Select jobs to execute...
+
+[Thu May 16 13:53:34 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr3/forward_split/00017.fasta, synthetic_reads/chr3/reverse_split/00017.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr3/aligned/00017.sam
+    log: synthetic_reads/chr3/aligned/00017.log
+    jobid: 433
+    benchmark: synthetic_reads/chr3/aligned/00017.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr3/aligned/00017.sam
+    wildcards: contig=chr3, chunk=00017
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 433 with external jobid 'Submitted batch job 38381880'.
+
+[Thu May 16 13:53:34 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr5/forward_split/00003.fasta, synthetic_reads/chr5/reverse_split/00003.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr5/aligned/00003.sam
+    log: synthetic_reads/chr5/aligned/00003.log
+    jobid: 491
+    benchmark: synthetic_reads/chr5/aligned/00003.benchmark.txt
+    reason: Updated input files: original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.sa, original_fasta/chm13v2.0.fa.pac
+    wildcards: contig=chr5, chunk=00003
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22834, disk_mib=21777, tmpdir=<TBD>
+
+Submitted job 491 with external jobid 'Submitted batch job 38381881'.
+
+[Thu May 16 13:53:35 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr13/forward_split/00004.fasta, synthetic_reads/chr13/reverse_split/00004.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr13/aligned/00004.sam
+    log: synthetic_reads/chr13/aligned/00004.log
+    jobid: 163
+    benchmark: synthetic_reads/chr13/aligned/00004.benchmark.txt
+    reason: Updated input files: original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.sa, original_fasta/chm13v2.0.fa.pac
+    wildcards: contig=chr13, chunk=00004
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 163 with external jobid 'Submitted batch job 38381882'.
+
+[Thu May 16 13:53:35 2024]
+rule bwa_mem:
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr10/forward_split/00009.fasta, synthetic_reads/chr10/reverse_split/00009.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr10/aligned/00009.sam
+    log: synthetic_reads/chr10/aligned/00009.log
+    jobid: 83
+    benchmark: synthetic_reads/chr10/aligned/00009.benchmark.txt
+    reason: Updated input files: original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.sa, original_fasta/chm13v2.0.fa.pac
+    wildcards: contig=chr10, chunk=00009
+    threads: 2
+    resources: mem_mb=128000, mem_mib=122071, disk_mb=22872, disk_mib=21813, tmpdir=<TBD>
+
+Submitted job 83 with external jobid 'Submitted batch job 38381883'.
+[Thu May 16 13:55:13 2024]
+Error in rule bwa_mem:
+    jobid: 433
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr3/forward_split/00017.fasta, synthetic_reads/chr3/reverse_split/00017.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr3/aligned/00017.sam
+    log: synthetic_reads/chr3/aligned/00017.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 bwa/0.7.17
+        bwa-mem mem -t 2             -v 3             -M             -K 100000000             -o 'synthetic_reads/chr3/aligned/00017.sam'             original_fasta/chm13v2.0.fa 'synthetic_reads/chr3/forward_split/00017.fasta' 'synthetic_reads/chr3/reverse_split/00017.fasta' >& 'synthetic_reads/chr3/aligned/00017.log'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 38381880
+
+Error executing rule bwa_mem on cluster (jobid: 433, external: Submitted batch job 38381880, jobscript: /n/scratch/users/b/boj924/SCAN2-joe/.snakemake/tmp.nrrzb42q/snakejob.bwa_mem.433.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Thu May 16 13:55:13 2024]
+Error in rule bwa_mem:
+    jobid: 491
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr5/forward_split/00003.fasta, synthetic_reads/chr5/reverse_split/00003.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr5/aligned/00003.sam
+    log: synthetic_reads/chr5/aligned/00003.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 bwa/0.7.17
+        bwa-mem mem -t 2             -v 3             -M             -K 100000000             -o 'synthetic_reads/chr5/aligned/00003.sam'             original_fasta/chm13v2.0.fa 'synthetic_reads/chr5/forward_split/00003.fasta' 'synthetic_reads/chr5/reverse_split/00003.fasta' >& 'synthetic_reads/chr5/aligned/00003.log'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 38381881
+
+Error executing rule bwa_mem on cluster (jobid: 491, external: Submitted batch job 38381881, jobscript: /n/scratch/users/b/boj924/SCAN2-joe/.snakemake/tmp.nrrzb42q/snakejob.bwa_mem.491.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Thu May 16 13:55:13 2024]
+Error in rule bwa_mem:
+    jobid: 163
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr13/forward_split/00004.fasta, synthetic_reads/chr13/reverse_split/00004.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr13/aligned/00004.sam
+    log: synthetic_reads/chr13/aligned/00004.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 bwa/0.7.17
+        bwa-mem mem -t 2             -v 3             -M             -K 100000000             -o 'synthetic_reads/chr13/aligned/00004.sam'             original_fasta/chm13v2.0.fa 'synthetic_reads/chr13/forward_split/00004.fasta' 'synthetic_reads/chr13/reverse_split/00004.fasta' >& 'synthetic_reads/chr13/aligned/00004.log'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 38381882
+
+Error executing rule bwa_mem on cluster (jobid: 163, external: Submitted batch job 38381882, jobscript: /n/scratch/users/b/boj924/SCAN2-joe/.snakemake/tmp.nrrzb42q/snakejob.bwa_mem.163.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Thu May 16 13:55:13 2024]
+Error in rule bwa_mem:
+    jobid: 83
+    input: original_fasta/chm13v2.0.fa, synthetic_reads/chr10/forward_split/00009.fasta, synthetic_reads/chr10/reverse_split/00009.fasta, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    output: synthetic_reads/chr10/aligned/00009.sam
+    log: synthetic_reads/chr10/aligned/00009.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 bwa/0.7.17
+        bwa-mem mem -t 2             -v 3             -M             -K 100000000             -o 'synthetic_reads/chr10/aligned/00009.sam'             original_fasta/chm13v2.0.fa 'synthetic_reads/chr10/forward_split/00009.fasta' 'synthetic_reads/chr10/reverse_split/00009.fasta' >& 'synthetic_reads/chr10/aligned/00009.log'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 38381883
+
+Error executing rule bwa_mem on cluster (jobid: 83, external: Submitted batch job 38381883, jobscript: /n/scratch/users/b/boj924/SCAN2-joe/.snakemake/tmp.nrrzb42q/snakejob.bwa_mem.83.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-05-16T135328.006450.snakemake.log

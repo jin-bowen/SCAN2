@@ -1,0 +1,101 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 4
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+bwa_index                               1
+bwa_mem                               300
+concat_parsed_tables                   25
+count_false_positive_alignments        25
+gather_false_positive_alignments        1
+make_bins                               1
+make_bins_per_contig                   25
+make_false_positive_bed                25
+parse_alignments                      300
+profile_nuc_content                     1
+split_paired_reads                      3
+total                                 708
+
+Select jobs to execute...
+
+[Wed May 15 10:23:52 2024]
+rule bwa_index:
+    input: original_fasta/chm13v2.0.fa
+    output: original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    log: original_fasta/bwa_index.log
+    jobid: 13
+    benchmark: original_fasta/bwa_index.benchmark.txt
+    reason: Missing output files: original_fasta/chm13v2.0.fa.sa, original_fasta/chm13v2.0.fa.bwt
+    resources: mem_mb=24000, mem_mib=22889, disk_mb=6020, disk_mib=5742, tmpdir=<TBD>
+
+Submitted job 13 with external jobid 'Submitted batch job 38308877'.
+
+[Wed May 15 10:23:52 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr16/reverse.fasta
+    output: synthetic_reads/chr16/reverse_split
+    log: synthetic_reads/chr16/split_paired_reads_reverse.log
+    jobid: 206
+    benchmark: synthetic_reads/chr16/split_paired_reads_reverse.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr16/reverse_split
+    wildcards: contig=chr16, direction=reverse
+    resources: mem_mb=500, mem_mib=477, disk_mb=31030, disk_mib=29593, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 206 with external jobid 'Submitted batch job 38308878'.
+
+[Wed May 15 10:23:52 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr14/reverse.fasta
+    output: synthetic_reads/chr14/reverse_split
+    log: synthetic_reads/chr14/split_paired_reads_reverse.log
+    jobid: 180
+    benchmark: synthetic_reads/chr14/split_paired_reads_reverse.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr14/reverse_split
+    wildcards: contig=chr14, direction=reverse
+    resources: mem_mb=500, mem_mib=477, disk_mb=32590, disk_mib=31081, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 180 with external jobid 'Submitted batch job 38308879'.
+
+[Wed May 15 10:23:53 2024]
+checkpoint split_paired_reads:
+    input: synthetic_reads/chr20/reverse.fasta
+    output: synthetic_reads/chr20/reverse_split
+    log: synthetic_reads/chr20/split_paired_reads_reverse.log
+    jobid: 318
+    benchmark: synthetic_reads/chr20/split_paired_reads_reverse.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr20/reverse_split
+    wildcards: contig=chr20, direction=reverse
+    resources: mem_mb=500, mem_mib=477, disk_mb=21321, disk_mib=20334, tmpdir=<TBD>
+DAG of jobs will be updated after completion.
+
+Submitted job 318 with external jobid 'Submitted batch job 38308880'.
+[Wed May 15 10:26:32 2024]
+Finished job 206.
+1 of 708 steps (0.1%) done
+[Wed May 15 10:26:32 2024]
+Finished job 180.
+2 of 728 steps (0.3%) done
+[Wed May 15 10:26:32 2024]
+Finished job 318.
+3 of 750 steps (0.4%) done
+[Wed May 15 10:31:02 2024]
+Error in rule bwa_index:
+    jobid: 13
+    input: original_fasta/chm13v2.0.fa
+    output: original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    log: original_fasta/bwa_index.log (check log file(s) for error details)
+    shell:
+        
+        /home/boj924/Tools/bwa-mem2-2.2.1_x64-linux/bwa-mem2 index  original_fasta/chm13v2.0.fa >& original_fasta/bwa_index.log
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 38308877
+
+Error executing rule bwa_index on cluster (jobid: 13, external: Submitted batch job 38308877, jobscript: /n/scratch/users/b/boj924/SCAN2-joe/.snakemake/tmp.h6w8949m/snakejob.bwa_index.13.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-05-15T102342.101193.snakemake.log

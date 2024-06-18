@@ -2,16 +2,15 @@
 
 rule gatk_combinegvcfs:
     input:
-        gvcfs=lambda wildcards:
-                expand("{gvcf_dir}/hc_raw.mmq60_chunk{{gatk_chunk}}.gvcf.gz",
-                       gvcf_dir=config['gvcf_map'],
-                       gatk_chunk=range(1, config['gatk_chunks']+1))
+        gvcfs=lambda wildcards: expand("{gvcf_dir}/hc_raw.mmq60.region_{{gatk_regions}}.gvcf.gz",
+                gvcf_dir=config['gvcf_map'],
+                gatk_region=config['gatk_regions'])
     output:
-        "gatk/hc_raw.mmq60_chunk{gatk_chunk}.gvcf.gz"
+        "gatk/hc_raw.mmq60.region_{gatk_regions}.gvcf.gz"
     resources:
         mem=8000
     benchmark:
-        "gatk/combinegvcfs_benchmark.mmq60_chunk{gatk_chunk}.tsv"
+        "gatk/combinegvcfs_benchmark.mmq60.region_{gatk_regions}.tsv"
     params:
         infiles=lambda wildcards, input:
             ' '.join([ "--variant " + f for f in input ])
@@ -25,11 +24,11 @@ rule gatk_combinegvcfs:
 
 rule gatk_genotypegvcfs:
     input:
-        gvcf="gatk/hc_raw.mmq60_chunk{gatk_chunk}.gvcf.gz"
+        gvcf="gatk/hc_raw.mmq60.region_{gatk_region}.gvcf.gz"
     output:
-        vcf="gatk/merge_mmq60_chunk{gatk_chunk}.vcf"
+        vcf="gatk/merge_mmq60.region_{gatk_region}.vcf"
     benchmark:
-        "gatk/genotypegvcfs_benchmark.mmq60_chunk{gatk_chunk}.tsv"
+        "gatk/genotypegvcfs_benchmark.mmq60.region_{gatk_region}.tsv"
     resources:
         mem=8000
     shell:
@@ -43,9 +42,8 @@ rule gatk_genotypegvcfs:
 
 rule gatk_gather:
     input:
-        vcfs=lambda wildcards:
-                expand("gatk/merge_mmq60_chunk{gatk_chunk}.vcf",
-                       gatk_chunk=range(1, config['gatk_chunks']+1))
+        vcfs=lambda wildcards: expand("gatk/merge_mmq60.region_{gatk_region}.vcf",
+            gatk_region=config['gatk_regions'])
     output:
         vcf="gatk/merge_mmq60.vcf"
     params:

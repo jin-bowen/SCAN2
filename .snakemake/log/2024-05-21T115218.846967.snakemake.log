@@ -1,0 +1,624 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 20
+Rules claiming more threads will be scaled down.
+Provided resources: localcores=20
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+bwa_mem                               297
+concat_parsed_tables                   25
+count_false_positive_alignments        25
+gather_false_positive_alignments        1
+make_bins                               1
+make_bins_per_contig                   25
+make_false_positive_bed                25
+parse_alignments                      328
+profile_nuc_content                     1
+total                                 729
+
+Select jobs to execute...
+
+[Tue May 21 11:52:32 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr5/aligned/00001.sam
+    output: synthetic_reads/chr5/parsed/00001.txt
+    log: synthetic_reads/chr5/parsed/00001.log
+    jobid: 486
+    benchmark: synthetic_reads/chr5/parsed/00001.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr5/parsed/00001.txt
+    wildcards: contig=chr5, chunk=00001
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:32 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr3/aligned/00014.sam
+    output: synthetic_reads/chr3/parsed/00014.txt
+    log: synthetic_reads/chr3/parsed/00014.log
+    jobid: 426
+    benchmark: synthetic_reads/chr3/parsed/00014.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr3/parsed/00014.txt
+    wildcards: contig=chr3, chunk=00014
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:32 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr11/aligned/00001.sam
+    output: synthetic_reads/chr11/parsed/00001.txt
+    log: synthetic_reads/chr11/parsed/00001.log
+    jobid: 96
+    benchmark: synthetic_reads/chr11/parsed/00001.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr11/parsed/00001.txt
+    wildcards: contig=chr11, chunk=00001
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:32 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr14/aligned/00003.sam
+    output: synthetic_reads/chr14/parsed/00003.txt
+    log: synthetic_reads/chr14/parsed/00003.log
+    jobid: 186
+    benchmark: synthetic_reads/chr14/parsed/00003.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr14/parsed/00003.txt
+    wildcards: contig=chr14, chunk=00003
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:32 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr4/aligned/00000.sam
+    output: synthetic_reads/chr4/parsed/00000.txt
+    log: synthetic_reads/chr4/parsed/00000.log
+    jobid: 442
+    benchmark: synthetic_reads/chr4/parsed/00000.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr4/parsed/00000.txt
+    wildcards: contig=chr4, chunk=00000
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:32 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr7/aligned/00000.sam
+    output: synthetic_reads/chr7/parsed/00000.txt
+    log: synthetic_reads/chr7/parsed/00000.log
+    jobid: 562
+    benchmark: synthetic_reads/chr7/parsed/00000.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr7/parsed/00000.txt
+    wildcards: contig=chr7, chunk=00000
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:32 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr10/aligned/00009.sam
+    output: synthetic_reads/chr10/parsed/00009.txt
+    log: synthetic_reads/chr10/parsed/00009.log
+    jobid: 82
+    benchmark: synthetic_reads/chr10/parsed/00009.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr10/parsed/00009.txt
+    wildcards: contig=chr10, chunk=00009
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr12/aligned/00009.sam
+    output: synthetic_reads/chr12/parsed/00009.txt
+    log: synthetic_reads/chr12/parsed/00009.log
+    jobid: 142
+    benchmark: synthetic_reads/chr12/parsed/00009.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr12/parsed/00009.txt
+    wildcards: contig=chr12, chunk=00009
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr3/aligned/00015.sam
+    output: synthetic_reads/chr3/parsed/00015.txt
+    log: synthetic_reads/chr3/parsed/00015.log
+    jobid: 428
+    benchmark: synthetic_reads/chr3/parsed/00015.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr3/parsed/00015.txt
+    wildcards: contig=chr3, chunk=00015
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr10/aligned/00002.sam
+    output: synthetic_reads/chr10/parsed/00002.txt
+    log: synthetic_reads/chr10/parsed/00002.log
+    jobid: 68
+    benchmark: synthetic_reads/chr10/parsed/00002.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr10/parsed/00002.txt
+    wildcards: contig=chr10, chunk=00002
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr4/aligned/00008.sam
+    output: synthetic_reads/chr4/parsed/00008.txt
+    log: synthetic_reads/chr4/parsed/00008.log
+    jobid: 458
+    benchmark: synthetic_reads/chr4/parsed/00008.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr4/parsed/00008.txt
+    wildcards: contig=chr4, chunk=00008
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr2/aligned/00010.sam
+    output: synthetic_reads/chr2/parsed/00010.txt
+    log: synthetic_reads/chr2/parsed/00010.log
+    jobid: 324
+    benchmark: synthetic_reads/chr2/parsed/00010.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr2/parsed/00010.txt
+    wildcards: contig=chr2, chunk=00010
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr8/aligned/00006.sam
+    output: synthetic_reads/chr8/parsed/00006.txt
+    log: synthetic_reads/chr8/parsed/00006.log
+    jobid: 610
+    benchmark: synthetic_reads/chr8/parsed/00006.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr8/parsed/00006.txt
+    wildcards: contig=chr8, chunk=00006
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr3/aligned/00016.sam
+    output: synthetic_reads/chr3/parsed/00016.txt
+    log: synthetic_reads/chr3/parsed/00016.log
+    jobid: 430
+    benchmark: synthetic_reads/chr3/parsed/00016.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr3/parsed/00016.txt
+    wildcards: contig=chr3, chunk=00016
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr1/aligned/00014.sam
+    output: synthetic_reads/chr1/parsed/00014.txt
+    log: synthetic_reads/chr1/parsed/00014.log
+    jobid: 40
+    benchmark: synthetic_reads/chr1/parsed/00014.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr1/parsed/00014.txt
+    wildcards: contig=chr1, chunk=00014
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:33 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr18/aligned/00006.sam
+    output: synthetic_reads/chr18/parsed/00006.txt
+    log: synthetic_reads/chr18/parsed/00006.log
+    jobid: 280
+    benchmark: synthetic_reads/chr18/parsed/00006.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr18/parsed/00006.txt
+    wildcards: contig=chr18, chunk=00006
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:34 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr7/aligned/00002.sam
+    output: synthetic_reads/chr7/parsed/00002.txt
+    log: synthetic_reads/chr7/parsed/00002.log
+    jobid: 566
+    benchmark: synthetic_reads/chr7/parsed/00002.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr7/parsed/00002.txt
+    wildcards: contig=chr7, chunk=00002
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:34 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr4/aligned/00002.sam
+    output: synthetic_reads/chr4/parsed/00002.txt
+    log: synthetic_reads/chr4/parsed/00002.log
+    jobid: 446
+    benchmark: synthetic_reads/chr4/parsed/00002.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr4/parsed/00002.txt
+    wildcards: contig=chr4, chunk=00002
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:34 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr6/aligned/00014.sam
+    output: synthetic_reads/chr6/parsed/00014.txt
+    log: synthetic_reads/chr6/parsed/00014.log
+    jobid: 552
+    benchmark: synthetic_reads/chr6/parsed/00014.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr6/parsed/00014.txt
+    wildcards: contig=chr6, chunk=00014
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+
+[Tue May 21 11:52:34 2024]
+rule parse_alignments:
+    input: synthetic_reads/chr12/aligned/00008.sam
+    output: synthetic_reads/chr12/parsed/00008.txt
+    log: synthetic_reads/chr12/parsed/00008.log
+    jobid: 140
+    benchmark: synthetic_reads/chr12/parsed/00008.benchmark.txt
+    reason: Missing output files: synthetic_reads/chr12/parsed/00008.txt
+    wildcards: contig=chr12, chunk=00008
+    resources: tmpdir=/tmp, mem_mb=1000, mem_mib=954
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 142
+    input: synthetic_reads/chr12/aligned/00009.sam
+    output: synthetic_reads/chr12/parsed/00009.txt
+    log: synthetic_reads/chr12/parsed/00009.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr12/aligned/00009.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr12/parsed/00009.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 428
+    input: synthetic_reads/chr3/aligned/00015.sam
+    output: synthetic_reads/chr3/parsed/00015.txt
+    log: synthetic_reads/chr3/parsed/00015.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr3/aligned/00015.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr3/parsed/00015.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 96
+    input: synthetic_reads/chr11/aligned/00001.sam
+    output: synthetic_reads/chr11/parsed/00001.txt
+    log: synthetic_reads/chr11/parsed/00001.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr11/aligned/00001.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr11/parsed/00001.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 442
+    input: synthetic_reads/chr4/aligned/00000.sam
+    output: synthetic_reads/chr4/parsed/00000.txt
+    log: synthetic_reads/chr4/parsed/00000.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr4/aligned/00000.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr4/parsed/00000.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 68
+    input: synthetic_reads/chr10/aligned/00002.sam
+    output: synthetic_reads/chr10/parsed/00002.txt
+    log: synthetic_reads/chr10/parsed/00002.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr10/aligned/00002.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr10/parsed/00002.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 486
+    input: synthetic_reads/chr5/aligned/00001.sam
+    output: synthetic_reads/chr5/parsed/00001.txt
+    log: synthetic_reads/chr5/parsed/00001.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr5/aligned/00001.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr5/parsed/00001.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 426
+    input: synthetic_reads/chr3/aligned/00014.sam
+    output: synthetic_reads/chr3/parsed/00014.txt
+    log: synthetic_reads/chr3/parsed/00014.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr3/aligned/00014.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr3/parsed/00014.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 430
+    input: synthetic_reads/chr3/aligned/00016.sam
+    output: synthetic_reads/chr3/parsed/00016.txt
+    log: synthetic_reads/chr3/parsed/00016.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr3/aligned/00016.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr3/parsed/00016.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 324
+    input: synthetic_reads/chr2/aligned/00010.sam
+    output: synthetic_reads/chr2/parsed/00010.txt
+    log: synthetic_reads/chr2/parsed/00010.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr2/aligned/00010.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr2/parsed/00010.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 82
+    input: synthetic_reads/chr10/aligned/00009.sam
+    output: synthetic_reads/chr10/parsed/00009.txt
+    log: synthetic_reads/chr10/parsed/00009.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr10/aligned/00009.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr10/parsed/00009.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 562
+    input: synthetic_reads/chr7/aligned/00000.sam
+    output: synthetic_reads/chr7/parsed/00000.txt
+    log: synthetic_reads/chr7/parsed/00000.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr7/aligned/00000.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr7/parsed/00000.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr12/parsed/00009.txt
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 458
+    input: synthetic_reads/chr4/aligned/00008.sam
+    output: synthetic_reads/chr4/parsed/00008.txt
+    log: synthetic_reads/chr4/parsed/00008.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr4/aligned/00008.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr4/parsed/00008.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 552
+    input: synthetic_reads/chr6/aligned/00014.sam
+    output: synthetic_reads/chr6/parsed/00014.txt
+    log: synthetic_reads/chr6/parsed/00014.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr6/aligned/00014.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr6/parsed/00014.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 566
+    input: synthetic_reads/chr7/aligned/00002.sam
+    output: synthetic_reads/chr7/parsed/00002.txt
+    log: synthetic_reads/chr7/parsed/00002.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr7/aligned/00002.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr7/parsed/00002.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 280
+    input: synthetic_reads/chr18/aligned/00006.sam
+    output: synthetic_reads/chr18/parsed/00006.txt
+    log: synthetic_reads/chr18/parsed/00006.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr18/aligned/00006.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr18/parsed/00006.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 610
+    input: synthetic_reads/chr8/aligned/00006.sam
+    output: synthetic_reads/chr8/parsed/00006.txt
+    log: synthetic_reads/chr8/parsed/00006.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr8/aligned/00006.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr8/parsed/00006.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr3/parsed/00015.txt
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 40
+    input: synthetic_reads/chr1/aligned/00014.sam
+    output: synthetic_reads/chr1/parsed/00014.txt
+    log: synthetic_reads/chr1/parsed/00014.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr1/aligned/00014.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr1/parsed/00014.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 186
+    input: synthetic_reads/chr14/aligned/00003.sam
+    output: synthetic_reads/chr14/parsed/00003.txt
+    log: synthetic_reads/chr14/parsed/00003.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr14/aligned/00003.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr14/parsed/00003.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 446
+    input: synthetic_reads/chr4/aligned/00002.sam
+    output: synthetic_reads/chr4/parsed/00002.txt
+    log: synthetic_reads/chr4/parsed/00002.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr4/aligned/00002.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr4/parsed/00002.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr11/parsed/00001.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr4/parsed/00000.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr10/parsed/00002.txt
+[Tue May 21 11:52:43 2024]
+Error in rule parse_alignments:
+    jobid: 140
+    input: synthetic_reads/chr12/aligned/00008.sam
+    output: synthetic_reads/chr12/parsed/00008.txt
+    log: synthetic_reads/chr12/parsed/00008.log (check log file(s) for error details)
+    shell:
+        
+        module load gcc/6.2.0 samtools/1.13 sambamba/0.7.1 java/jdk-1.8u112 
+
+        ulimit -S -n 4096 
+
+        samtools view -f 64             --keep-tag XA             'synthetic_reads/chr12/aligned/00008.sam'         | /home/boj924/scan2_binning/parse_gen_reads.py > 'synthetic_reads/chr12/parsed/00008.txt'
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr5/parsed/00001.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr3/parsed/00014.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr3/parsed/00016.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr2/parsed/00010.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr10/parsed/00009.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr7/parsed/00000.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr4/parsed/00008.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr6/parsed/00014.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr18/parsed/00006.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr8/parsed/00006.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr7/parsed/00002.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr1/parsed/00014.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr14/parsed/00003.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr4/parsed/00002.txt
+Removing output files of failed job parse_alignments since they might be corrupted:
+synthetic_reads/chr12/parsed/00008.txt
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-05-21T115218.846967.snakemake.log

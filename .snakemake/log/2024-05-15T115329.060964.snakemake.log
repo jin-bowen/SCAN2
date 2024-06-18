@@ -1,0 +1,32 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 4
+Job stats:
+job                                 count
+--------------------------------  -------
+all                                     1
+bwa_index                               1
+bwa_mem                               328
+concat_parsed_tables                   25
+count_false_positive_alignments        25
+gather_false_positive_alignments        1
+make_bins                               1
+make_bins_per_contig                   25
+make_false_positive_bed                25
+parse_alignments                      328
+profile_nuc_content                     1
+total                                 761
+
+Select jobs to execute...
+
+[Wed May 15 11:53:51 2024]
+rule bwa_index:
+    input: original_fasta/chm13v2.0.fa
+    output: original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt, original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa
+    log: original_fasta/bwa_index.log
+    jobid: 13
+    benchmark: original_fasta/bwa_index.benchmark.txt
+    reason: Missing output files: original_fasta/chm13v2.0.fa.pac, original_fasta/chm13v2.0.fa.sa, original_fasta/chm13v2.0.fa.amb, original_fasta/chm13v2.0.fa.ann, original_fasta/chm13v2.0.fa.bwt
+    resources: mem_mb=240000, mem_mib=228882, disk_mb=6020, disk_mib=5742, tmpdir=<TBD>
+
+Submitted job 13 with external jobid 'Submitted batch job 38316310'.

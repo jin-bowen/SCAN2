@@ -9,7 +9,6 @@ wildcard_constraints:
     muttype='snv|indel',
     passtype='pass|rescue'
 
-print("SCAN2 version=" + config['scan2_version'] + ", buildnum=" + str(config['scan2_buildnum']) + ", githash=" + config['scan2_githash'])
 
 if config['analysis'] == 'call_mutations':
     include: "snakefile.call_mutations"

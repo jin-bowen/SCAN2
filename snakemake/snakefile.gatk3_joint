@@ -56,13 +56,7 @@ rule gatk_scatter:
         # by the cluster scheduler.
         memreq=lambda wildcards, input, output, threads, resources: str(int(resources.mem_mb/2) - 500) + "M"
     resources:
-<<<<<<< HEAD
-        mem=10000
-    benchmark:
-        "gatk/scatter_benchmark.mmq{gatk_mmq}_chunk{gatk_chunk}.tsv"
-=======
         mem_mb=5000
->>>>>>> 18f81f85bc32c345e57ede175bdf5f60846fdf7c
     shell:
         """
         gatk3 \
